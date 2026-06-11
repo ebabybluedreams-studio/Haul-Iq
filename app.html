@@ -2,1069 +2,897 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Haul IQ — AI Dispatch & Freight Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>HaulIQ™ — Dispatch Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0c0e;
-  --surface:#0f1215;
-  --surface2:#161b20;
-  --surface3:#1d2429;
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
-  --text:#d4dce6;
-  --muted:#4d6070;
-  --orange:#e8630a;
-  --orange2:#ff8c3a;
-  --yellow:#f5c842;
-  --green:#1fb87a;
-  --red:#e84040;
-  --blue:#1a9fd4;
-  --grid-line:rgba(255,255,255,0.03);
+  --bg:#f0f1f3;--white:#ffffff;--ink:#0a0c10;
+  --surface:#f6f7f9;--border:#dde1e9;--muted:#7a8696;
+  --orange:#e8630a;--orange2:#ff8530;--yellow:#f5c418;
+  --green:#17a86a;--green2:#1fc97e;--red:#e03535;--blue:#1890c8;
+  --card:#ffffff;
 }
 html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:'Barlow',sans-serif;
-  min-height:100vh;overflow-x:hidden;
-}
-/* grid bg */
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    linear-gradient(var(--grid-line) 1px,transparent 1px),
-    linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
-  background-size:40px 40px;
-}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden;padding-bottom:80px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px}
 
-/* ── APP SHELL ── */
-.app{display:flex;min-height:100vh;position:relative;z-index:1}
+/* TOP BAR */
+.topbar{background:var(--ink);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-icon{width:32px;height:32px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;color:#000;clip-path:polygon(0 0,100% 0,100% 72%,72% 100%,0 100%)}
+.brand-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;letter-spacing:0.04em;color:#fff;text-transform:uppercase}
+.brand-name span{color:var(--orange)}
+.brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-top:1px}
+.rev-chip{background:rgba(23,168,106,0.15);border:1px solid rgba(23,168,106,0.3);color:var(--green2);font-family:'Share Tech Mono',monospace;font-size:11px;padding:4px 10px}
 
-/* ── SIDEBAR ── */
-.sidebar{
-  width:220px;min-width:220px;
-  background:var(--surface);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:sticky;top:0;height:100vh;overflow-y:auto;
-}
-.logo{
-  padding:20px 16px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;
-}
-.logo-icon{
-  width:34px;height:34px;
-  background:var(--orange);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:#000;
-  clip-path:polygon(0 0,100% 0,100% 75%,75% 100%,0 100%);
-}
-.logo-text{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:0.05em}
-.logo-text span{color:var(--orange)}
-.logo-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.15em;margin-top:1px}
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--ink);display:flex;padding:8px 0 12px}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer;border:none;background:none;font-family:'Share Tech Mono',monospace;font-size:8px;font-weight:500;color:rgba(255,255,255,0.3);transition:all 0.2s;letter-spacing:0.05em;text-transform:uppercase}
+.nav-btn.active{color:var(--orange)}
+.nav-btn svg{width:20px;height:20px}
 
-.nav{padding:12px 0;flex:1}
-.nav-sec{padding:8px 16px 4px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)}
-.nav-item{
-  display:flex;align-items:center;gap:10px;padding:9px 16px;
-  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:500;
-  letter-spacing:0.04em;color:var(--muted);cursor:pointer;
-  border-left:2px solid transparent;transition:all 0.18s;
-}
-.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03)}
-.nav-item.active{color:var(--orange);border-left-color:var(--orange);background:rgba(232,99,10,0.06)}
-.nav-item svg{width:14px;height:14px;flex-shrink:0}
-
-.sidebar-stats{padding:12px 16px;border-top:1px solid var(--border)}
-.stat-mini{margin-bottom:12px}
-.stat-mini-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.stat-mini-val{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;line-height:1}
-.stat-mini-val.orange{color:var(--orange)}
-.stat-mini-val.green{color:var(--green)}
-.online-dot{display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:6px;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-
-/* ── TOPBAR ── */
-.topbar{
-  padding:12px 24px;
-  background:var(--surface);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:20;
-}
-.topbar-left{display:flex;align-items:center;gap:12px}
-.topbar-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:0.05em}
-.topbar-title span{color:var(--orange)}
-.topbar-right{display:flex;align-items:center;gap:10px}
-.status-chip{
-  font-family:'Share Tech Mono',monospace;font-size:10px;
-  padding:4px 10px;border-radius:2px;letter-spacing:0.1em;
-}
-.chip-live{background:rgba(31,184,122,0.12);color:var(--green);border:1px solid rgba(31,184,122,0.25)}
-.chip-pro{background:rgba(232,99,10,0.12);color:var(--orange);border:1px solid rgba(232,99,10,0.25)}
-
-/* ── MAIN ── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.content{flex:1;overflow-y:auto;padding:24px}
-
-/* ── PAGES ── */
-.page{display:none;animation:pgIn 0.25s ease}
+/* PAGES */
+.page{display:none;padding:14px;animation:pgIn 0.2s ease}
 .page.active{display:block}
 @keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── CARDS ── */
-.card{
-  background:var(--surface);border:1px solid var(--border);
-  padding:20px;margin-bottom:16px;position:relative;
-}
-.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--orange)}
-.card-title{
-  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;
-  letter-spacing:0.06em;text-transform:uppercase;margin-bottom:4px;
-  display:flex;align-items:center;gap:8px;
-}
-.card-sub{font-size:13px;color:var(--muted);margin-bottom:18px;font-weight:300}
+/* CARDS */
+.card{background:var(--white);border-radius:0;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-left:3px solid transparent}
+.card.orange-border{border-left-color:var(--orange)}
+.card.green-border{border-left-color:var(--green)}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px}
+.card-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+.card-sys{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
 
-/* ── GRID ── */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+/* FORMS */
+.fg{margin-bottom:12px}
+.fl{display:block;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.fi,.fs{width:100%;background:var(--surface);border:1.5px solid var(--border);padding:10px 12px;color:var(--ink);font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;outline:none;transition:border-color 0.2s;border-radius:0}
+.fi:focus,.fs:focus{border-color:var(--orange)}
 
-/* ── STAT BLOCKS ── */
-.kpi{
-  background:var(--surface);border:1px solid var(--border);
-  padding:16px;position:relative;overflow:hidden;
-}
-.kpi::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--orange),transparent);
-}
-.kpi-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.kpi-val{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;line-height:1;color:var(--text)}
-.kpi-val.orange{color:var(--orange)}
-.kpi-val.green{color:var(--green)}
-.kpi-val.yellow{color:var(--yellow)}
-.kpi-change{font-size:12px;color:var(--muted);margin-top:6px;font-family:'Share Tech Mono',monospace}
-.kpi-change.up{color:var(--green)}
-.kpi-change.dn{color:var(--red)}
-
-/* ── FORMS ── */
-.fg{margin-bottom:14px}
-.fl{display:block;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
-.fi,.fs,.ft{
-  width:100%;background:var(--surface2);border:1px solid var(--border2);
-  padding:9px 12px;color:var(--text);font-family:'Barlow',sans-serif;font-size:14px;
-  outline:none;transition:border-color 0.2s;
-}
-.fi:focus,.fs:focus,.ft:focus{border-color:var(--orange)}
-.ft{resize:vertical;min-height:80px;line-height:1.6}
-.fs option{background:var(--surface2)}
-
-/* ── BUTTONS ── */
-.btn{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:9px 18px;font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
-  cursor:pointer;border:none;transition:all 0.18s;
-}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;border:none;transition:all 0.18s}
 .btn-primary{background:var(--orange);color:#000}
-.btn-primary:hover{background:var(--orange2);transform:translateY(-1px)}
-.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-primary:hover{background:var(--orange2)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green2)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--ink)}
 .btn-outline:hover{border-color:var(--orange);color:var(--orange)}
-.btn-green{background:rgba(31,184,122,0.12);color:var(--green);border:1px solid rgba(31,184,122,0.25)}
-.btn-green:hover{background:rgba(31,184,122,0.22)}
-.btn-ghost{background:rgba(232,99,10,0.08);color:var(--orange);border:1px solid rgba(232,99,10,0.2)}
-.btn-ghost:hover{background:rgba(232,99,10,0.18)}
-.btn:disabled{opacity:0.35;cursor:not-allowed;transform:none!important}
-.btn-full{width:100%;justify-content:center}
+.btn-full{width:100%}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
 
-/* ── AI BUBBLE ── */
-.ai-out{
-  background:var(--surface2);border:1px solid var(--border2);
-  border-left:3px solid var(--orange);
-  padding:16px 18px;margin-top:14px;display:none;
-  animation:pgIn 0.3s ease;
-}
+/* EQUIP PILLS */
+.equip-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.equip-pill{padding:7px 12px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all 0.18s}
+.equip-pill.active{border-color:var(--orange);background:rgba(232,99,10,0.08);color:var(--orange)}
+
+/* STAT CHIPS */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat-chip{background:var(--white);border:1.5px solid var(--border);border-top:2px solid var(--orange);padding:12px 8px;text-align:center}
+.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;line-height:1;margin-bottom:4px}
+.stat-val.orange{color:var(--orange)}
+.stat-val.green{color:var(--green)}
+.stat-val.red{color:var(--red)}
+.stat-val.blue{color:var(--blue)}
+.stat-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+
+/* AI OUTPUT */
+.ai-out{background:var(--ink);border-left:3px solid var(--orange);padding:16px;margin-top:12px;display:none;animation:pgIn 0.3s ease}
 .ai-out.show{display:block}
-.ai-head{
-  font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.15em;
-  text-transform:uppercase;color:var(--orange);margin-bottom:10px;
-  display:flex;align-items:center;gap:8px;
-}
-.ai-dot{width:6px;height:6px;background:var(--orange);border-radius:50%;animation:blink 1.2s infinite}
-.ai-body{font-size:14px;line-height:1.8;white-space:pre-wrap;color:var(--text);font-weight:300}
+.ai-head{display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.ai-pulse{width:6px;height:6px;background:var(--orange);border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.ai-body{font-size:13px;line-height:1.8;white-space:pre-wrap;color:rgba(205,214,224,0.9);font-weight:300}
 
-/* ── LOADING ── */
+/* LOADING */
 .ld{display:inline-flex;gap:3px;align-items:center}
-.ld span{width:4px;height:4px;background:var(--orange);border-radius:50%;animation:ldBounce 1.2s infinite}
+.ld span{width:4px;height:4px;background:currentColor;border-radius:50%;animation:ldB 1.2s infinite}
 .ld span:nth-child(2){animation-delay:.2s}
 .ld span:nth-child(3){animation-delay:.4s}
-@keyframes ldBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+@keyframes ldB{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
 
-/* ── LOAD BOARD ── */
-.load-table{width:100%;border-collapse:collapse;font-size:13px}
-.load-table th{
-  font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.2em;
-  text-transform:uppercase;color:var(--muted);text-align:left;
-  padding:10px 12px;border-bottom:1px solid var(--border);background:var(--surface2);
-}
-.load-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
-.load-table tr:hover td{background:rgba(255,255,255,0.02)}
-.load-row-pick{font-weight:500;color:var(--text)}
-.load-row-rate{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700}
-.load-row-rate.good{color:var(--green)}
-.load-row-rate.avg{color:var(--yellow)}
-.load-row-rate.low{color:var(--red)}
-.score-badge{
-  font-family:'Share Tech Mono',monospace;font-size:10px;
-  padding:3px 8px;border-radius:2px;
-}
-.score-a{background:rgba(31,184,122,0.15);color:var(--green);border:1px solid rgba(31,184,122,0.3)}
-.score-b{background:rgba(245,200,66,0.12);color:var(--yellow);border:1px solid rgba(245,200,66,0.25)}
-.score-c{background:rgba(232,64,64,0.1);color:var(--red);border:1px solid rgba(232,64,64,0.25)}
-.load-action{
-  font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;
-  padding:4px 10px;background:rgba(232,99,10,0.1);color:var(--orange);
-  border:1px solid rgba(232,99,10,0.25);cursor:pointer;transition:all 0.2s;
-}
-.load-action:hover{background:rgba(232,99,10,0.25)}
-.load-type{
-  font-family:'Share Tech Mono',monospace;font-size:9px;
-  padding:2px 7px;background:var(--surface3);color:var(--muted);border:1px solid var(--border);
-}
+/* LEAK RESULT */
+.leak-grid{background:var(--surface);border:1.5px solid var(--border);padding:14px;margin-top:12px}
+.leak-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.leak-row:last-child{border:none}
+.leak-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.15em;color:var(--muted)}
+.leak-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900}
+.leak-val.red{color:var(--red)}
+.leak-val.orange{color:var(--orange)}
+.leak-val.green{color:var(--green)}
+.action-box{background:var(--ink);border-left:3px solid var(--green);padding:14px;margin-top:10px}
+.action-box-title{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.action-box p{font-size:13px;color:rgba(205,214,224,0.85);line-height:1.7;white-space:pre-wrap}
 
-/* ── TRUCK STATUS ── */
-.truck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:4px}
-.truck-card{
-  background:var(--surface2);border:1px solid var(--border);padding:14px;
-  position:relative;transition:border-color 0.2s;
-}
-.truck-card.rolling{border-color:rgba(31,184,122,0.3)}
-.truck-card.idle{border-color:rgba(245,200,66,0.2)}
-.truck-card.off{border-color:var(--border)}
-.truck-id{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:0.05em;margin-bottom:4px}
-.truck-driver{font-size:12px;color:var(--muted);margin-bottom:8px}
-.truck-status-row{display:flex;align-items:center;justify-content:space-between}
-.truck-status{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;padding:2px 7px;border-radius:2px}
-.ts-rolling{background:rgba(31,184,122,0.12);color:var(--green);border:1px solid rgba(31,184,122,0.25)}
-.ts-idle{background:rgba(245,200,66,0.1);color:var(--yellow);border:1px solid rgba(245,200,66,0.2)}
-.ts-off{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border)}
-.truck-miles{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted)}
-.truck-progress{height:2px;background:rgba(255,255,255,0.06);margin-top:10px;border-radius:1px;overflow:hidden}
-.truck-bar{height:100%;background:var(--green);border-radius:1px}
+/* HOS */
+.hos-display{background:var(--ink);padding:16px;margin:12px 0}
+.hos-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.hos-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(205,214,224,0.5)}
+.hos-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--text)}
+.hos-bar-bg{height:8px;background:rgba(255,255,255,0.08);margin-bottom:6px}
+.hos-bar-fill{height:100%;transition:width 1s ease}
+.hos-status{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;text-align:right}
 
-/* ── EARNINGS ── */
-.earn-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;
-}
-.earn-row:last-child{border:none}
-.earn-date{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted)}
-.earn-route{font-weight:500}
-.earn-amount{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--green)}
-.earn-rpm{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted)}
+/* LOAD ITEMS */
+.load-item{background:var(--white);border:1.5px solid var(--border);border-left:3px solid var(--orange);padding:12px 14px;margin-bottom:8px}
+.load-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.load-origin{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:0.03em;text-transform:uppercase}
+.load-arrow{font-size:12px;color:var(--muted)}
+.load-rpm{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--green)}
+.load-details{display:flex;gap:12px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.08em}
+.load-score-badge{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;padding:3px 10px;border-left:2px solid}
+.load-score-badge.high{background:rgba(23,168,106,0.12);color:var(--green);border-color:var(--green)}
+.load-score-badge.mid{background:rgba(245,196,24,0.12);color:var(--yellow);border-color:var(--yellow)}
+.load-score-badge.low{background:rgba(224,53,53,0.1);color:var(--red);border-color:var(--red)}
 
-/* ── COMPLIANCE ── */
-.comp-item{
-  display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);
-  align-items:flex-start;
-}
-.comp-item:last-child{border:none}
-.comp-icon{width:32px;height:32px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:14px;min-width:32px}
-.ci-ok{background:rgba(31,184,122,0.12);border:1px solid rgba(31,184,122,0.25)}
-.ci-warn{background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.2)}
-.ci-alert{background:rgba(232,64,64,0.1);border:1px solid rgba(232,64,64,0.25)}
-.comp-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:0.04em;margin-bottom:3px}
-.comp-desc{font-size:13px;color:var(--muted);line-height:1.5}
-.comp-due{font-family:'Share Tech Mono',monospace;font-size:10px;margin-top:4px}
-.due-ok{color:var(--green)}
-.due-warn{color:var(--yellow)}
-.due-alert{color:var(--red)}
+/* SEC LABEL */
+.sec-label{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* ── CHAT ── */
-.chat-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:0;padding:16px;margin-bottom:10px;max-height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
-.cmsg{display:flex;gap:8px;align-items:flex-start;animation:pgIn 0.25s ease}
-.cmsg.user{flex-direction:row-reverse}
-.cav{width:28px;height:28px;min-width:28px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px}
-.cav.ai{background:var(--orange);color:#000}
-.cav.user{background:var(--surface3);border:1px solid var(--border2);color:var(--muted)}
-.cbubble{
-  background:var(--surface);border:1px solid var(--border);
-  padding:9px 13px;font-size:13px;line-height:1.65;max-width:82%;
-  font-weight:300;
-}
-.cmsg.user .cbubble{background:rgba(232,99,10,0.08);border-color:rgba(232,99,10,0.2);color:var(--orange2)}
-.chat-input-row{display:flex;gap:8px}
+/* CALLOUT */
+.callout{padding:12px 14px;font-size:13px;line-height:1.6;margin:8px 0;border-left:3px solid}
+.callout-orange{background:rgba(232,99,10,0.06);border-color:var(--orange)}
+.callout-green{background:rgba(23,168,106,0.06);border-color:var(--green)}
+.callout-red{background:rgba(224,53,53,0.06);border-color:var(--red)}
 
-/* ── ROUTE OPTIMIZER ── */
-.route-map{
-  background:var(--surface2);border:1px solid var(--border);
-  height:180px;display:flex;align-items:center;justify-content:center;
-  margin-bottom:14px;position:relative;overflow:hidden;
-}
-.route-map-bg{
-  position:absolute;inset:0;
-  background:
-    repeating-linear-gradient(0deg,rgba(255,255,255,0.02) 0,rgba(255,255,255,0.02) 1px,transparent 1px,transparent 30px),
-    repeating-linear-gradient(90deg,rgba(255,255,255,0.02) 0,rgba(255,255,255,0.02) 1px,transparent 1px,transparent 30px);
-}
-.route-line{
-  position:absolute;top:50%;left:10%;right:10%;height:2px;
-  background:linear-gradient(90deg,var(--orange),var(--yellow),var(--green));
-  transform:translateY(-50%);
-}
-.route-dot{
-  position:absolute;top:50%;width:10px;height:10px;border-radius:50%;
-  transform:translateY(-50%);border:2px solid var(--bg);
-}
-.route-label{
-  position:absolute;font-family:'Share Tech Mono',monospace;font-size:10px;
-  color:var(--muted);transform:translateX(-50%);
-}
-.route-truck{
-  position:absolute;top:50%;font-size:18px;
-  transform:translate(-50%,-50%);
-  animation:truckMove 4s ease-in-out infinite;
-}
-@keyframes truckMove{0%{left:15%}100%{left:80%}}
-
-/* ── TAGS ── */
-.tag{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:10px;
-  padding:3px 8px;margin:2px;border-radius:2px}
-.tag-o{background:rgba(232,99,10,0.1);color:var(--orange);border:1px solid rgba(232,99,10,0.2)}
-.tag-g{background:rgba(31,184,122,0.1);color:var(--green);border:1px solid rgba(31,184,122,0.2)}
-.tag-y{background:rgba(245,200,66,0.08);color:var(--yellow);border:1px solid rgba(245,200,66,0.18)}
-
-/* ── DIVIDER ── */
-.div{height:1px;background:var(--border);margin:16px 0}
-
-/* ── ONBOARDING ── */
-#onboard{
-  position:fixed;inset:0;z-index:200;background:var(--bg);
-  display:flex;align-items:center;justify-content:center;padding:20px;
-}
-.ob-box{
-  background:var(--surface);border:1px solid var(--border2);
-  max-width:500px;width:100%;padding:36px;
-  border-top:3px solid var(--orange);
-}
-.ob-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
-.ob-step{display:none}
-.ob-step.active{display:block;animation:pgIn 0.3s ease}
-.ob-title{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
-.ob-sub{font-size:14px;color:var(--muted);margin-bottom:24px;font-weight:300}
-.ob-dots{display:flex;gap:6px;margin-bottom:24px}
-.ob-dot{width:24px;height:3px;background:var(--border2);transition:background 0.3s}
-.ob-dot.done{background:var(--orange)}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .sidebar{display:none}
-  .g2,.g3,.g4{grid-template-columns:1fr}
-  .content{padding:14px}
-}
+/* COPY BTN */
+.copy-btn{background:rgba(23,168,106,0.1);color:var(--green);border:1px solid rgba(23,168,106,0.3);padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;width:100%;margin-top:10px}
 </style>
 </head>
 <body>
 
-<!-- ONBOARDING -->
-<div id="onboard">
-  <div class="ob-box">
-    <div class="ob-logo">
-      <div class="logo-icon">H</div>
-      <div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px">HAUL <span style="color:var(--orange)">IQ</span></div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.15em">AI DISPATCH INTELLIGENCE</div>
-      </div>
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">H</div>
+    <div>
+      <div class="brand-name">Haul<span>IQ</span>™</div>
+      <div class="brand-sub">Dispatch Intelligence</div>
     </div>
-    <div class="ob-dots">
-      <div class="ob-dot done" id="od0"></div>
-      <div class="ob-dot" id="od1"></div>
-      <div class="ob-dot" id="od2"></div>
+  </div>
+  <div class="rev-chip" id="topRevenue">Revenue: $0</div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div class="page active" id="page-dash">
+  <div class="card orange-border">
+    <div class="card-sys">Operations Command Center · Multi-Fleet Intelligence™</div>
+    <div class="card-title">Equipment Type</div>
+    <div class="card-sub">Select your truck — HaulIQ™ customizes all 7 intelligence systems to your equipment</div>
+    <div class="equip-row">
+      <div class="equip-pill active" onclick="setEquip('Dry Van',this)">🚛 Dry Van</div>
+      <div class="equip-pill" onclick="setEquip('Reefer',this)">❄️ Reefer</div>
+      <div class="equip-pill" onclick="setEquip('Flatbed',this)">🏗️ Flatbed</div>
+      <div class="equip-pill" onclick="setEquip('Tanker',this)">🧪 Tanker</div>
+      <div class="equip-pill" onclick="setEquip('Box Truck',this)">📦 Box Truck</div>
+      <div class="equip-pill" onclick="setEquip('Lowboy',this)">⚙️ Lowboy</div>
+      <div class="equip-pill" onclick="setEquip('Dump Truck',this)">🪨 Dump</div>
+      <div class="equip-pill" onclick="setEquip('Tow/Wrecker',this)">🔧 Tow/Wrecker</div>
+    </div>
+    <div class="card-title" style="margin-top:14px">Freight Type Intelligence™</div>
+    <div class="card-sub">Select your freight — recommendations and RPM benchmarks adjust automatically</div>
+    <div class="equip-row" id="freightPills">
+      <div class="equip-pill active" onclick="setFreight('General Freight',this)">📦 General</div>
+      <div class="equip-pill" onclick="setFreight('Refrigerated Freight',this)">❄️ Refrigerated</div>
+      <div class="equip-pill" onclick="setFreight('Hazmat Freight',this)">☢️ Hazmat</div>
+      <div class="equip-pill" onclick="setFreight('Oversized Loads',this)">📐 Oversized</div>
+      <div class="equip-pill" onclick="setFreight('Construction Materials',this)">🏗️ Construction</div>
+      <div class="equip-pill" onclick="setFreight('Agricultural Freight',this)">🌾 Agricultural</div>
+      <div class="equip-pill" onclick="setFreight('Automotive Freight',this)">🚗 Automotive</div>
+      <div class="equip-pill" onclick="setFreight('Heavy Equipment Transport',this)">⚙️ Heavy Equip</div>
+      <div class="equip-pill" onclick="setFreight('Local Delivery Freight',this)">📍 Local</div>
+      <div class="equip-pill" onclick="setFreight('Recovery & Towing Services',this)">🔧 Recovery</div>
+    </div>
+    <div id="freightIntelBadge" style="margin-top:4px;display:none">
+      <div class="callout callout-orange" id="freightIntelText" style="font-size:12px;line-height:1.6"></div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-chip"><div class="stat-val orange" id="dashRev">$0</div><div class="stat-label">This Week</div></div>
+    <div class="stat-chip"><div class="stat-val green" id="dashRPM">—</div><div class="stat-label">Avg RPM</div></div>
+    <div class="stat-chip"><div class="stat-val red" id="dashDH">—</div><div class="stat-label">Deadhead %</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-sys">Quick Log</div>
+    <div class="card-title">Log a Completed Load</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Origin</label><input class="fi" id="log-origin" placeholder="Atlanta, GA"></div>
+      <div class="fg" style="margin:0"><label class="fl">Destination</label><input class="fi" id="log-dest" placeholder="Nashville, TN"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+      <div class="fg" style="margin:0"><label class="fl">Miles</label><input class="fi" id="log-miles" type="number" placeholder="0"></div>
+      <div class="fg" style="margin:0"><label class="fl">Revenue ($)</label><input class="fi" id="log-rev" type="number" placeholder="0"></div>
+      <div class="fg" style="margin:0"><label class="fl">DH Miles</label><input class="fi" id="log-dh" type="number" placeholder="0"></div>
+    </div>
+    <button class="btn btn-green btn-full" style="margin-top:10px" onclick="logLoad()">+ Log Load</button>
+  </div>
+
+  <div class="card" id="loadHistCard" style="display:none">
+    <div class="card-sys">Load History</div>
+    <div class="card-title">Completed Loads</div>
+    <div id="loadList"></div>
+  </div>
+</div>
+
+<!-- ══ EMPTYRIG™ ══ -->
+<div class="page" id="page-empty">
+
+  <!-- REVENUE COST DASHBOARD -->
+  <div class="card orange-border">
+    <div class="card-sys">System 01 — Flagship · Revenue Recovery</div>
+    <div class="card-title">EmptyRig™ Revenue Recovery System</div>
+    <div class="card-sub">Full deadhead analysis · Empty mile forecasting · Revenue recovery intelligence</div>
+
+    <div class="sec-label">Step 1 — Deadhead Cost Analysis</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">DH Miles/Week</label><input class="fi" id="dhc-miles" type="number" placeholder="421" oninput="calcDeadhead()"></div>
+      <div class="fg" style="margin:0"><label class="fl">Fuel ($/gal)</label><input class="fi" id="dhc-fuel" type="number" placeholder="3.85" step="0.05" oninput="calcDeadhead()"></div>
+      <div class="fg" style="margin:0"><label class="fl">Avg RPM ($)</label><input class="fi" id="dhc-rpm" type="number" placeholder="2.20" step="0.05" oninput="calcDeadhead()"></div>
     </div>
 
-    <div class="ob-step active" id="os0">
-      <div class="ob-title">Your Operation</div>
-      <div class="ob-sub">Tell us about your fleet so we can personalize your dashboard.</div>
-      <div class="fg"><label class="fl">Your Name / Company</label><input class="fi" id="ob-name" placeholder="e.g. Mike Rivera / Rivera Trucking"></div>
-      <div class="fg"><label class="fl">Fleet Size</label>
-        <select class="fs" id="ob-size">
-          <option>1 truck (owner-operator)</option>
-          <option>2–5 trucks</option>
-          <option>6–15 trucks</option>
-          <option>15+ trucks</option>
+    <div id="dhcResult" style="display:none;margin-top:4px">
+      <!-- 6-stat grid -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
+        <div class="stat-chip"><div class="stat-val red" id="dhcMiles">421</div><div class="stat-label">DH Miles/Wk</div></div>
+        <div class="stat-chip"><div class="stat-val red" id="dhcRevLost">$0</div><div class="stat-label">Rev Lost/Wk</div></div>
+        <div class="stat-chip"><div class="stat-val red" id="dhcFuelWk">$0</div><div class="stat-label">Fuel Wasted/Wk</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+        <div class="stat-chip"><div class="stat-val orange" id="dhcMonth">$0</div><div class="stat-label">Monthly Loss</div></div>
+        <div class="stat-chip"><div class="stat-val red" id="dhcYear">$0</div><div class="stat-label">Annual Loss</div></div>
+        <div class="stat-chip"><div class="stat-val orange" id="dhcScore">—</div><div class="stat-label">Recovery Score™</div></div>
+      </div>
+      <div id="dhcRec" class="callout callout-orange" style="font-size:12px;line-height:1.6"></div>
+    </div>
+  </div>
+
+  <!-- EMPTY MILE FORECASTER -->
+  <div class="card">
+    <div class="card-sys">Empty Mile Forecasting</div>
+    <div class="card-title">Monthly & Annual Projection</div>
+    <div class="card-sub">Project your deadhead cost trajectory and recovery potential</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Weekly DH Miles</label><input class="fi" id="emf-miles" type="number" placeholder="e.g. 421" oninput="calcForecast()"></div>
+      <div class="fg" style="margin:0"><label class="fl">Target DH Reduction (%)</label><input class="fi" id="emf-reduce" type="number" placeholder="e.g. 40" oninput="calcForecast()"></div>
+    </div>
+    <div id="emfResult" style="display:none;margin-top:8px">
+      <div class="leak-grid">
+        <div class="leak-row"><span class="leak-lbl">Current Annual DH Miles</span><span class="leak-val red" id="emfCurrAnnual">—</span></div>
+        <div class="leak-row"><span class="leak-lbl">Target Annual DH Miles</span><span class="leak-val green" id="emfTargAnnual">—</span></div>
+        <div class="leak-row"><span class="leak-lbl">Miles Recovered/Year</span><span class="leak-val green" id="emfMilesRec">—</span></div>
+        <div class="leak-row"><span class="leak-lbl">Revenue Recovery/Year</span><span class="leak-val green" id="emfRevRec">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI BACKHAUL FINDER -->
+  <div class="card orange-border">
+    <div class="card-sys">AI Backhaul Finder · Lane Opportunity Scanner</div>
+    <div class="card-title">Find Revenue Opportunities</div>
+    <div class="card-sub">AI scans lanes, brokers, and freight opportunities based on your equipment and freight type</div>
+
+    <div class="fg"><label class="fl">Current Empty Location</label><input class="fi" id="er-location" placeholder="e.g. Memphis, TN — just delivered"></div>
+    <div class="fg"><label class="fl">Preferred Direction or Destination</label><input class="fi" id="er-dest" placeholder="e.g. Southeast, Chicago area, or open to anything profitable"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Equipment Type</label>
+        <select class="fs" id="er-equip">
+          <option>Dry Van</option><option>Reefer</option><option>Flatbed</option><option>Tanker</option><option>Box Truck</option><option>Lowboy</option><option>Dump Truck</option><option>Tow/Wrecker</option>
         </select>
       </div>
-      <div class="fg"><label class="fl">Primary Freight Type</label>
-        <select class="fs" id="ob-freight">
-          <option>Dry Van</option>
-          <option>Flatbed</option>
-          <option>Reefer</option>
-          <option>LTL / Mixed</option>
-          <option>Tanker</option>
-          <option>Hotshot</option>
+      <div class="fg" style="margin:0"><label class="fl">Freight Type</label>
+        <select class="fs" id="er-freight">
+          <option>General Freight</option><option>Refrigerated Freight</option><option>Hazmat Freight</option><option>Oversized Loads</option><option>Construction Materials</option><option>Agricultural Freight</option><option>Automotive Freight</option><option>Heavy Equipment Transport</option><option>Local Delivery Freight</option><option>Recovery &amp; Towing Services</option>
         </select>
       </div>
-      <button class="btn btn-primary btn-full" onclick="obNext(1)" style="margin-top:8px">Continue →</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Current DH % (if known)</label><input class="fi" id="er-dh" type="number" placeholder="e.g. 25"></div>
+      <div class="fg" style="margin:0"><label class="fl">Target RPM ($)</label><input class="fi" id="er-rpm" type="number" placeholder="e.g. 2.20" step="0.05"></div>
+    </div>
+    <div class="fg"><label class="fl">Max Acceptable Deadhead to Next Load (miles)</label><input class="fi" id="er-radius" type="number" placeholder="e.g. 50"></div>
+
+    <button class="btn btn-primary btn-full" id="erBtn" onclick="runEmptyRig()">🔄 Scan Revenue Opportunities</button>
+
+    <div class="ai-out" id="erResult">
+      <div class="ai-head"><div class="ai-pulse"></div>EmptyRig™ Revenue Recovery Intelligence</div>
+      <div class="ai-body" id="erText"></div>
+    </div>
+  </div>
+
+  <!-- NEARBY FREIGHT FINDER -->
+  <div class="card">
+    <div class="card-sys">Nearby Freight Opportunity Finder</div>
+    <div class="card-title">What's Moving Near Me?</div>
+    <div class="card-sub">AI identifies freight activity and broker opportunities close to your empty location</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Your Empty Location</label><input class="fi" id="nf-location" placeholder="e.g. Dallas, TX"></div>
+      <div class="fg" style="margin:0"><label class="fl">Radius (miles)</label><input class="fi" id="nf-radius" type="number" placeholder="75"></div>
+    </div>
+    <button class="btn btn-outline btn-full" id="nfBtn" onclick="runNearbyFreight()" style="margin-top:4px">📡 Find Nearby Freight</button>
+    <div class="ai-out" id="nfResult">
+      <div class="ai-head"><div class="ai-pulse"></div>Nearby Freight Intelligence</div>
+      <div class="ai-body" id="nfText"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ PROFIT LEAK ══ -->
+<div class="page" id="page-profit">
+  <div class="card orange-border">
+    <div class="card-sys">System 02 — Profitability Intelligence</div>
+    <div class="card-title">Profit Leak Detector™</div>
+    <div class="card-sub">Input your numbers — find where money is disappearing</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Weekly Miles</label><input class="fi" id="pl-miles" type="number" placeholder="2000"></div>
+      <div class="fg" style="margin:0"><label class="fl">Fuel ($/gal)</label><input class="fi" id="pl-fuel" type="number" placeholder="3.85" step="0.05"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <div class="fg" style="margin:0"><label class="fl">Deadhead %</label><input class="fi" id="pl-dh" type="number" placeholder="25"></div>
+      <div class="fg" style="margin:0"><label class="fl">Avg RPM ($)</label><input class="fi" id="pl-rpm" type="number" placeholder="2.10" step="0.05"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <div class="fg" style="margin:0"><label class="fl">Loads Per Week</label><input class="fi" id="pl-loads" type="number" placeholder="3"></div>
+      <div class="fg" style="margin:0"><label class="fl">Equipment Type</label>
+        <select class="fs" id="pl-equip">
+          <option>Dry Van</option><option>Reefer</option><option>Flatbed</option><option>Tanker</option><option>Box Truck</option><option>Lowboy</option><option>Dump Truck</option><option>Tow/Wrecker</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg" style="margin-top:8px"><label class="fl">Freight Type Intelligence™</label>
+      <select class="fs" id="pl-freight">
+        <option>General Freight</option><option>Refrigerated Freight</option><option>Hazmat Freight</option><option>Oversized Loads</option><option>Construction Materials</option><option>Agricultural Freight</option><option>Automotive Freight</option><option>Heavy Equipment Transport</option><option>Local Delivery Freight</option><option>Recovery &amp; Towing Services</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Primary Lanes (e.g. Southeast loop, Midwest spot)</label><input class="fi" id="pl-lanes" placeholder="e.g. Atlanta to Chicago, Southeast regional"></div>
+    <button class="btn btn-primary btn-full" id="plBtn" onclick="runProfitLeak()">🔍 Detect Profit Leaks</button>
+
+    <div id="plResult" style="display:none;margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-sys">RPM Intelligence</div>
+    <div class="card-title">Load Worth-It Analyzer</div>
+    <div class="card-sub">Should you take this load?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Load Pay ($)</label><input class="fi" id="lw-pay" type="number" placeholder="1800" oninput="calcLoadWorth()"></div>
+      <div class="fg" style="margin:0"><label class="fl">Miles</label><input class="fi" id="lw-miles" type="number" placeholder="850" oninput="calcLoadWorth()"></div>
+      <div class="fg" style="margin:0"><label class="fl">DH Miles</label><input class="fi" id="lw-dh" type="number" placeholder="60" oninput="calcLoadWorth()"></div>
+    </div>
+    <div id="lwResult" style="display:none;margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- ══ HOURSGUARD™ ══ -->
+<div class="page" id="page-hos">
+  <div class="card orange-border">
+    <div class="card-sys">System 03 — HOS Planning Intelligence</div>
+    <div class="card-title">HoursGuard™</div>
+    <div class="card-sub">Monitor available hours and plan trips around your HOS window. Planning tool — not compliance software.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Drive Hours Used Today</label><input class="fi" id="hos-drive-used" type="number" placeholder="0" step="0.25" oninput="updateHOS()"></div>
+      <div class="fg" style="margin:0"><label class="fl">On-Duty Hours Used Today</label><input class="fi" id="hos-duty-used" type="number" placeholder="0" step="0.25" oninput="updateHOS()"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <div class="fg" style="margin:0"><label class="fl">70hr Window Used</label><input class="fi" id="hos-70" type="number" placeholder="0" step="0.5" oninput="updateHOS()"></div>
+      <div class="fg" style="margin:0"><label class="fl">Hours Since Last 30min Break</label><input class="fi" id="hos-break" type="number" placeholder="0" step="0.25" oninput="updateHOS()"></div>
     </div>
 
-    <div class="ob-step" id="os1">
-      <div class="ob-title">Your Routes</div>
-      <div class="ob-sub">Where do you run? We'll show you the best loads in your lanes.</div>
-      <div class="fg"><label class="fl">Home Base (City, State)</label><input class="fi" id="ob-base" placeholder="e.g. Newark, NJ"></div>
-      <div class="fg"><label class="fl">Primary Lanes</label><input class="fi" id="ob-lanes" placeholder="e.g. Northeast corridor, TX to CA, Midwest"></div>
-      <div class="fg"><label class="fl">Biggest Challenge Right Now</label>
-        <select class="fs" id="ob-challenge">
-          <option>Finding good-paying loads</option>
-          <option>Managing compliance / HOS</option>
-          <option>Fuel cost optimization</option>
-          <option>Growing my fleet</option>
-          <option>Getting paid faster</option>
-        </select>
+    <div class="hos-display" id="hosDisplay" style="display:none">
+      <div class="hos-row">
+        <div><div class="hos-label">Remaining Drive Time</div><div class="hos-val" id="hosRemDrive" style="color:var(--orange)">— hrs</div></div>
+        <div style="text-align:right"><div class="hos-label">Remaining On-Duty</div><div class="hos-val" id="hosRemDuty" style="color:var(--yellow)">— hrs</div></div>
       </div>
-      <button class="btn btn-primary btn-full" onclick="obNext(2)" style="margin-top:8px">Continue →</button>
+      <div class="hos-label" style="margin-bottom:4px">Drive Hours Window</div>
+      <div class="hos-bar-bg"><div class="hos-bar-fill" id="hosDriveBar" style="background:var(--orange)"></div></div>
+      <div class="hos-label" style="margin-bottom:10px">On-Duty Window</div>
+      <div class="hos-bar-bg"><div class="hos-bar-fill" id="hosDutyBar" style="background:var(--yellow)"></div></div>
+      <div id="hosAlert" class="callout callout-orange" style="display:none"></div>
     </div>
+  </div>
 
-    <div class="ob-step" id="os2">
-      <div style="text-align:center;padding:20px 0">
-        <div style="font-size:40px;margin-bottom:16px">🚛</div>
-        <div class="ob-title" style="text-align:center">Loading Your Dashboard</div>
-        <div id="ob-loading" style="color:var(--muted);font-size:13px;margin:12px 0">
-          Calibrating AI for your operation <span class="ld"><span></span><span></span><span></span></span>
-        </div>
-        <div id="ob-ready" style="display:none">
-          <div style="color:var(--green);font-family:'Share Tech Mono',monospace;font-size:12px;margin-bottom:20px">✓ SYSTEM READY — ALL SYSTEMS GO</div>
-          <button class="btn btn-primary btn-full" onclick="launchApp()">Enter Haul IQ →</button>
-        </div>
-      </div>
+  <div class="card">
+    <div class="card-sys">Route Time Forecasting</div>
+    <div class="card-title">Trip HOS Planner</div>
+    <div class="card-sub">Can you make this trip on your current hours?</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Trip Route</label><input class="fi" id="trip-route" placeholder="e.g. Dallas, TX to Kansas City, MO"></div>
+      <div class="fg" style="margin:0"><label class="fl">Est. Drive Hours</label><input class="fi" id="trip-hours" type="number" placeholder="6.5" step="0.25"></div>
+    </div>
+    <button class="btn btn-primary btn-full" style="margin-top:8px" id="hosBtn" onclick="runHOSPlan()">⏱️ Analyze Trip HOS</button>
+    <div class="ai-out" id="hosResult">
+      <div class="ai-head"><div class="ai-pulse"></div>HoursGuard™ Trip Analysis</div>
+      <div class="ai-body" id="hosText"></div>
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="app" id="appShell" style="display:none">
-
-  <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <div class="logo">
-      <div class="logo-icon">H</div>
-      <div>
-        <div class="logo-text">HAUL <span>IQ</span></div>
-        <div class="logo-sub">Dispatch Intelligence</div>
-      </div>
-    </div>
-    <div class="nav">
-      <div class="nav-sec">Operations</div>
-      <div class="nav-item active" onclick="showPage('dashboard',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
-        Dashboard
-      </div>
-      <div class="nav-item" onclick="showPage('loadboard',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        Load Board
-      </div>
-      <div class="nav-item" onclick="showPage('fleet',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-        Fleet Tracker
-      </div>
-      <div class="nav-item" onclick="showPage('route',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-        Route Optimizer
-      </div>
-      <div class="nav-sec">Business</div>
-      <div class="nav-item" onclick="showPage('earnings',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Earnings
-      </div>
-      <div class="nav-item" onclick="showPage('compliance',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        Compliance
-      </div>
-      <div class="nav-item" onclick="showPage('dispatcher',this)">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        AI Dispatcher
-      </div>
-    </div>
-    <div class="sidebar-stats">
-      <div class="stat-mini">
-        <div class="stat-mini-label">Weekly Rev</div>
-        <div class="stat-mini-val green" id="sbRev">—</div>
-      </div>
-      <div class="stat-mini">
-        <div class="stat-mini-label">Avg RPM</div>
-        <div class="stat-mini-val orange" id="sbRpm">—</div>
-      </div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">
-        <span class="online-dot"></span>AI ONLINE
-      </div>
-    </div>
-  </nav>
-
-  <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-left">
-        <div class="topbar-title">HAUL <span>IQ</span> — <span id="topPageName">DASHBOARD</span></div>
-      </div>
-      <div class="topbar-right">
-        <span class="status-chip chip-live">● LIVE</span>
-        <span class="status-chip chip-pro" id="topFleet">—</span>
-      </div>
-    </div>
-
-    <div class="content">
-
-      <!-- ── DASHBOARD ── -->
-      <div class="page active" id="page-dashboard">
-        <div class="g4" style="margin-bottom:14px">
-          <div class="kpi"><div class="kpi-label">This Week</div><div class="kpi-val green" id="dashRev">—</div><div class="kpi-change up" id="dashRevNote">Revenue</div></div>
-          <div class="kpi"><div class="kpi-label">Avg RPM</div><div class="kpi-val orange" id="dashRpm">—</div><div class="kpi-change">Revenue per mile</div></div>
-          <div class="kpi"><div class="kpi-label">Miles Run</div><div class="kpi-val" id="dashMiles">—</div><div class="kpi-change">This week</div></div>
-          <div class="kpi"><div class="kpi-label">Compliance</div><div class="kpi-val yellow" id="dashComp">—</div><div class="kpi-change" id="dashCompNote">Items to review</div></div>
-        </div>
-
-        <div class="g2">
-          <div class="card">
-            <div class="card-title">🚛 Fleet Status</div>
-            <div class="card-sub">Real-time truck positions</div>
-            <div id="dashFleetPreview"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">⚡ Quick Actions</div>
-            <div class="card-sub">Most-used tools</div>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <button class="btn btn-ghost btn-full" onclick="showPage('loadboard',document.querySelector('[onclick*=loadboard]'))">▶ Find Loads in My Lanes</button>
-              <button class="btn btn-outline btn-full" onclick="showPage('route',document.querySelector('[onclick*=route]'))">▶ Optimize My Next Route</button>
-              <button class="btn btn-outline btn-full" onclick="showPage('compliance',document.querySelector('[onclick*=compliance]'))">▶ Check Compliance Status</button>
-              <button class="btn btn-green btn-full" onclick="showPage('dispatcher',document.querySelector('[onclick*=dispatcher]'))">▶ Ask AI Dispatcher</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">📊 Earnings Trend</div>
-          <div class="card-sub">Last 7 days at a glance</div>
-          <canvas id="earningsChart" height="80"></canvas>
-        </div>
-      </div>
-
-      <!-- ── LOAD BOARD ── -->
-      <div class="page" id="page-loadboard">
-        <div class="card">
-          <div class="card-title">📋 AI Load Board</div>
-          <div class="card-sub">AI-scored loads ranked for your lanes, freight type, and target RPM</div>
-          <div class="g2" style="margin-bottom:14px">
-            <div class="fg" style="margin:0"><label class="fl">Origin</label><input class="fi" id="lb-origin" placeholder="e.g. Newark, NJ"></div>
-            <div class="fg" style="margin:0"><label class="fl">Destination (or leave blank)</label><input class="fi" id="lb-dest" placeholder="e.g. Atlanta, GA — or any"></div>
-          </div>
-          <div class="g2" style="margin-bottom:14px">
-            <div class="fg" style="margin:0"><label class="fl">Freight Type</label>
-              <select class="fs" id="lb-type"><option>Dry Van</option><option>Flatbed</option><option>Reefer</option><option>LTL</option><option>Hotshot</option></select>
-            </div>
-            <div class="fg" style="margin:0"><label class="fl">Min RPM Target</label>
-              <select class="fs" id="lb-rpm"><option>$2.00+</option><option>$2.50+</option><option selected>$3.00+</option><option>$3.50+</option></select>
-            </div>
-          </div>
-          <button class="btn btn-primary" id="lbBtn" onclick="findLoads()">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            Find Best Loads
-          </button>
-
-          <div class="ai-out" id="lbResult">
-            <div class="ai-head"><div class="ai-dot"></div>AI Load Analysis</div>
-            <div class="ai-body" id="lbText"></div>
-          </div>
-
-          <div id="lbTable" style="margin-top:16px;display:none">
-            <table class="load-table" id="loadTableEl"></table>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── FLEET TRACKER ── -->
-      <div class="page" id="page-fleet">
-        <div class="card">
-          <div class="card-title">🗺️ Fleet Tracker</div>
-          <div class="card-sub">Live status of all trucks in your operation</div>
-          <div class="truck-grid" id="truckGrid"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">⚡ AI Fleet Analysis</div>
-          <div class="card-sub">Get an instant efficiency report on your fleet</div>
-          <div class="fg">
-            <label class="fl">Describe any current issues (optional)</label>
-            <textarea class="ft" id="fleetIssue" placeholder="e.g. Unit 03 has been idling a lot, Unit 01 keeps getting low-paying loads, Unit 02 driver complains about deadhead miles..."></textarea>
-          </div>
-          <button class="btn btn-primary" id="fleetBtn" onclick="analyzeFleet()">Analyze Fleet Efficiency</button>
-          <div class="ai-out" id="fleetResult">
-            <div class="ai-head"><div class="ai-dot"></div>Fleet Intelligence Report</div>
-            <div class="ai-body" id="fleetText"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── ROUTE OPTIMIZER ── -->
-      <div class="page" id="page-route">
-        <div class="card">
-          <div class="card-title">📍 AI Route Optimizer</div>
-          <div class="card-sub">Minimize deadhead, maximize revenue per mile on any run</div>
-          <div class="route-map">
-            <div class="route-map-bg"></div>
-            <div class="route-line"></div>
-            <div class="route-dot" style="left:10%;background:var(--orange)"></div>
-            <div class="route-dot" style="left:50%;background:var(--yellow)"></div>
-            <div class="route-dot" style="left:88%;background:var(--green)"></div>
-            <div class="route-label" style="left:10%;top:30%">ORIGIN</div>
-            <div class="route-label" style="left:50%;top:30%">STOP</div>
-            <div class="route-label" style="left:88%;top:30%">DEST</div>
-            <div class="route-truck">🚛</div>
-          </div>
-          <div class="g2">
-            <div class="fg"><label class="fl">Starting Point</label><input class="fi" id="rt-from" placeholder="e.g. Newark, NJ"></div>
-            <div class="fg"><label class="fl">Final Destination</label><input class="fi" id="rt-to" placeholder="e.g. Miami, FL"></div>
-          </div>
-          <div class="g2">
-            <div class="fg"><label class="fl">Truck Type</label>
-              <select class="fs" id="rt-truck"><option>Dry Van 53ft</option><option>Flatbed 48ft</option><option>Reefer</option><option>Hotshot</option></select>
-            </div>
-            <div class="fg"><label class="fl">Fuel Cost ($/gal)</label><input class="fi" id="rt-fuel" placeholder="e.g. 3.85"></div>
-          </div>
-          <div class="fg"><label class="fl">Any Constraints</label><input class="fi" id="rt-notes" placeholder="e.g. no toll roads, need fuel stop in Charlotte, 11hr drive limit today"></div>
-          <button class="btn btn-primary" id="rtBtn" onclick="optimizeRoute()">Optimize This Route</button>
-          <div class="ai-out" id="rtResult">
-            <div class="ai-head"><div class="ai-dot"></div>Route Intelligence</div>
-            <div class="ai-body" id="rtText"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── EARNINGS ── -->
-      <div class="page" id="page-earnings">
-        <div class="g2" style="margin-bottom:14px">
-          <div class="kpi"><div class="kpi-label">This Month</div><div class="kpi-val green" id="earnMonth">—</div><div class="kpi-change up">Gross revenue</div></div>
-          <div class="kpi"><div class="kpi-label">Net After Fuel</div><div class="kpi-val orange" id="earnNet">—</div><div class="kpi-change">Est. take-home</div></div>
-        </div>
-        <div class="card">
-          <div class="card-title">💰 Recent Loads</div>
-          <div class="card-sub">Revenue history</div>
-          <div id="earnList"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">📈 AI Earnings Forecast</div>
-          <div class="card-sub">What you could be making — and how to get there</div>
-          <div class="fg"><label class="fl">Current Average RPM</label><input class="fi" id="fc-rpm" placeholder="e.g. 2.85"></div>
-          <div class="fg"><label class="fl">Average Miles Per Week</label><input class="fi" id="fc-miles" placeholder="e.g. 2200"></div>
-          <div class="fg"><label class="fl">Your Biggest Revenue Leak</label>
-            <select class="fs" id="fc-leak">
-              <option>Too many empty miles</option>
-              <option>Rates too low</option>
-              <option>Truck sitting idle</option>
-              <option>High fuel costs</option>
-              <option>Broker taking too much</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" id="fcBtn" onclick="getForecast()">Get AI Earnings Forecast</button>
-          <div class="ai-out" id="fcResult">
-            <div class="ai-head"><div class="ai-dot"></div>Earnings Intelligence</div>
-            <div class="ai-body" id="fcText"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── COMPLIANCE ── -->
-      <div class="page" id="page-compliance">
-        <div class="card">
-          <div class="card-title">🛡️ Compliance Center</div>
-          <div class="card-sub">Stay DOT-compliant and avoid costly fines</div>
-          <div id="compList"></div>
-        </div>
-        <div class="card" style="margin-top:16px">
-          <div class="card-title">⚖️ AI Compliance Advisor</div>
-          <div class="card-sub">Ask any HOS, DOT, or FMCSA question in plain English</div>
-          <div class="fg"><label class="fl">Your Question</label>
-            <textarea class="ft" id="compQ" placeholder="e.g. I drove 9 hours yesterday and need to deliver by 6am tomorrow. Can I legally drive tonight? What are my options?"></textarea>
-          </div>
-          <button class="btn btn-primary" id="compBtn" onclick="askCompliance()">Get Compliance Answer</button>
-          <div class="ai-out" id="compResult">
-            <div class="ai-head"><div class="ai-dot"></div>Compliance Advisor</div>
-            <div class="ai-body" id="compText"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── AI DISPATCHER ── -->
-      <div class="page" id="page-dispatcher">
-        <div class="card">
-          <div class="card-title">🚦 AI Dispatcher</div>
-          <div class="card-sub">Your 24/7 dispatch intelligence — routes, loads, negotiations, strategy</div>
-          <div class="chat-wrap" id="dispatchChat">
-            <div class="cmsg">
-              <div class="cav ai">H</div>
-              <div class="cbubble">Haul IQ online. I know your lanes, your freight type, and your goals. Ask me anything — best loads right now, how to negotiate a better rate, what to do about a broker issue, HOS questions, or business strategy. What do you need?</div>
-            </div>
-          </div>
-          <div class="chat-input-row">
-            <input class="fi" id="dispInput" placeholder="Ask your dispatcher..." style="flex:1" onkeydown="if(event.key==='Enter')sendDispatch()">
-            <button class="btn btn-primary" onclick="sendDispatch()">Send</button>
-          </div>
-        </div>
-      </div>
-
+<!-- ══ AI DISPATCHER™ ══ -->
+<div class="page" id="page-dispatch">
+  <div class="card orange-border">
+    <div class="card-sys">System 04 — Flagship · AI Dispatch Intelligence</div>
+    <div class="card-title">24/7 AI Dispatcher™</div>
+    <div class="card-sub">Dispatch recommendations, load analysis, revenue optimization — ask anything</div>
+    <div class="fg"><input class="fi" id="disp-input" placeholder="e.g. I have a $1,800 load from Memphis to Chicago 850 miles. Should I take it for my dry van? What's a fair rate?" onkeydown="if(event.key==='Enter')askDispatcher()"></div>
+    <button class="btn btn-primary btn-full" id="dispBtn" onclick="askDispatcher()">🤖 Ask AI Dispatcher™</button>
+    <div class="ai-out" id="dispResult">
+      <div class="ai-head"><div class="ai-pulse"></div>24/7 AI Dispatcher™</div>
+      <div class="ai-body" id="dispText"></div>
     </div>
   </div>
+
+  <div class="sec-label">Quick Dispatch Questions</div>
+  <button class="btn btn-outline btn-full" style="margin-bottom:6px;text-align:left;justify-content:flex-start;font-size:13px" onclick="quickDispatch('What are the best paying lanes for dry van right now and what RPM should I target on each?')">🚛 Best paying dry van lanes right now</button>
+  <button class="btn btn-outline btn-full" style="margin-bottom:6px;text-align:left;justify-content:flex-start;font-size:13px" onclick="quickDispatch('When should I negotiate a load rate versus accept the broker rate as-is? Give me specific rules of thumb.')">💰 When to negotiate vs accept a load rate</button>
+  <button class="btn btn-outline btn-full" style="margin-bottom:6px;text-align:left;justify-content:flex-start;font-size:13px" onclick="quickDispatch('What is a good strategy for reducing deadhead miles as an owner operator running Southeast to Midwest lanes?')">📉 Deadhead reduction strategy</button>
+  <button class="btn btn-outline btn-full" style="margin-bottom:6px;text-align:left;justify-content:flex-start;font-size:13px" onclick="quickDispatch('How do I know if a load board load is worth taking? Walk me through how to evaluate any load quickly.')">⚡ How to evaluate any load quickly</button>
+  <button class="btn btn-outline btn-full" style="margin-bottom:6px;text-align:left;justify-content:flex-start;font-size:13px" onclick="quickDispatch('What are the most important KPIs an owner operator should track weekly to know if their business is profitable?')">📊 KPIs every owner-op should track</button>
+</div>
+
+<!-- ══ ROI CALCULATOR ══ -->
+<div class="page" id="page-roi">
+  <div class="card orange-border">
+    <div class="card-sys">System 05 — ROI Intelligence</div>
+    <div class="card-title">ROI Calculator</div>
+    <div class="card-sub">Calculate the real financial impact of smarter operations</div>
+
+    <div class="fg"><label class="fl">Weekly Miles</label><input class="fi" id="roi-miles" type="number" placeholder="2500"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg" style="margin:0"><label class="fl">Current RPM</label><input class="fi" id="roi-rpm" type="number" placeholder="2.10" step="0.05"></div>
+      <div class="fg" style="margin:0"><label class="fl">Target RPM</label><input class="fi" id="roi-trpm" type="number" placeholder="2.35" step="0.05"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <div class="fg" style="margin:0"><label class="fl">Current Deadhead %</label><input class="fi" id="roi-dh" type="number" placeholder="28"></div>
+      <div class="fg" style="margin:0"><label class="fl">Target Deadhead %</label><input class="fi" id="roi-tdh" type="number" placeholder="15"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <div class="fg" style="margin:0"><label class="fl">Fuel MPG</label><input class="fi" id="roi-mpg" type="number" placeholder="6.5" step="0.5"></div>
+      <div class="fg" style="margin:0"><label class="fl">Fuel Cost ($/gal)</label><input class="fi" id="roi-fuel" type="number" placeholder="3.85" step="0.05"></div>
+    </div>
+    <button class="btn btn-primary btn-full" style="margin-top:10px" onclick="calcROI()">💰 Calculate ROI Potential</button>
+    <div id="roiResult" style="display:none;margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-sys">AI Analysis</div>
+    <div class="card-title">Deep ROI Intelligence</div>
+    <div class="card-sub">Get AI-powered recommendations based on your numbers</div>
+    <div class="fg"><label class="fl">Describe Your Operation</label><input class="fi" id="roi-desc" placeholder="e.g. Single truck dry van, Southeast lanes, about 2,200 miles/week, 27% deadhead, $2.08 RPM"></div>
+    <button class="btn btn-primary btn-full" id="roiAiBtn" onclick="runROIAnalysis()">📊 Generate ROI Analysis</button>
+    <div class="ai-out" id="roiAiResult">
+      <div class="ai-head"><div class="ai-pulse"></div>ROI Intelligence Analysis</div>
+      <div class="ai-body" id="roiAiText"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="showPage('dash',this)">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Dashboard
+  </button>
+  <button class="nav-btn" onclick="showPage('empty',this)">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+    EmptyRig™
+  </button>
+  <button class="nav-btn" onclick="showPage('profit',this)">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+    Profit
+  </button>
+  <button class="nav-btn" onclick="showPage('hos',this)">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    HoursGuard™
+  </button>
+  <button class="nav-btn" onclick="showPage('dispatch',this)">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+    Dispatch
+  </button>
+  <button class="nav-btn" onclick="showPage('roi',this)">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    ROI
+  </button>
 </div>
 
 <script>
-// ── STATE ──
-const S = {
-  name:'', fleetSize:'', freight:'', base:'', lanes:'', challenge:'',
-  dispMessages:[], trucks:[]
+// STATE
+let equip='Dry Van', freight='General Freight', loads=[], totalRevenue=0;
+
+// FREIGHT INTEL BENCHMARKS
+const freightRPM={
+  'General Freight':{min:1.80,target:2.20,premium:2.60},
+  'Refrigerated Freight':{min:2.20,target:2.70,premium:3.20},
+  'Hazmat Freight':{min:2.50,target:3.00,premium:3.80},
+  'Oversized Loads':{min:3.00,target:4.00,premium:6.00},
+  'Construction Materials':{min:1.80,target:2.40,premium:3.00},
+  'Agricultural Freight':{min:1.60,target:2.10,premium:2.60},
+  'Automotive Freight':{min:2.20,target:2.80,premium:3.50},
+  'Heavy Equipment Transport':{min:3.50,target:5.00,premium:8.00},
+  'Local Delivery Freight':{min:1.40,target:1.90,premium:2.40},
+  'Recovery & Towing Services':{min:2.00,target:3.00,premium:5.00},
+};
+const freightDesc={
+  'General Freight':'Standard dry van freight. Target $2.20+ RPM. Best backhaul lanes: Southeast, Midwest, Texas triangle.',
+  'Refrigerated Freight':'Reefer freight commands premium rates. Target $2.70+ RPM. Grocery and food distribution chains offer consistent volume.',
+  'Hazmat Freight':'Hazmat endorsement required. Premium rates available — target $3.00+ RPM. Less competition, more consistent tender.',
+  'Oversized Loads':'Permit-required. High-value loads with rates often $4–8+/mile. Plan lead time for permits and escorts.',
+  'Construction Materials':'Regional demand. Target $2.40+ RPM. Strong in growth markets — Sun Belt, Texas, Southeast.',
+  'Agricultural Freight':'Seasonal demand cycles. Target $2.10+ RPM. Harvest seasons drive rates. Watch for grain, produce, and livestock corridors.',
+  'Automotive Freight':'Specialized equipment needed. Target $2.80+ RPM. Auto manufacturing corridors: Midwest, Southeast.',
+  'Heavy Equipment Transport':'Highest value freight category. Target $5.00+ RPM. Requires lowboy, RGN, or specialized trailer.',
+  'Local Delivery Freight':'High stop count, lower RPM. Target $1.90+ RPM. Volume and consistency over per-mile rate.',
+  'Recovery & Towing Services':'Flat rate and hourly billing common. Non-traditional RPM model. Focus on call volume and response radius.',
 };
 
-// ── ONBOARDING ──
-let obStep = 0;
-function obNext(n) {
-  if(n===1){S.name=document.getElementById('ob-name').value||'Operator';S.fleetSize=document.getElementById('ob-size').value;S.freight=document.getElementById('ob-freight').value}
-  if(n===2){S.base=document.getElementById('ob-base').value||'Your area';S.lanes=document.getElementById('ob-lanes').value||'National';S.challenge=document.getElementById('ob-challenge').value}
-  document.getElementById('os'+obStep).classList.remove('active');
-  document.getElementById('od'+obStep).classList.add('done');
-  obStep=n;
-  document.getElementById('os'+n).classList.add('active');
-  document.getElementById('od'+n).classList.add('done');
-  if(n===2) setTimeout(()=>{document.getElementById('ob-ready').style.display='block'},1800);
-}
-
-function launchApp(){
-  document.getElementById('onboard').style.display='none';
-  document.getElementById('appShell').style.display='flex';
-  // fill UI
-  const name=S.name.split(' ')[0]||'Operator';
-  document.getElementById('topFleet').textContent=S.fleetSize;
-  // pre-fill forms
-  if(S.base){document.getElementById('lb-origin').value=S.base;document.getElementById('rt-from').value=S.base}
-  if(S.freight){document.getElementById('lb-type').value=S.freight;document.getElementById('rt-truck').value=S.freight+' 53ft'}
-  // init mock data
-  initMockData();
-}
-
-// ── MOCK DATA ──
-function initMockData(){
-  const fleetNums=[1,2,3,4].slice(0,parseInt(S.fleetSize)||1);
-  const drivers=['Rivera','Johnson','Martinez','Thompson'];
-  const statuses=['rolling','rolling','idle','off'];
-  const locs=['I-95 NJ','I-78 PA','Yard - Newark','Off duty'];
-  const loads=['Newark→Atlanta','I-95 corridor','—','—'];
-  const pcts=[62,45,0,0];
-  S.trucks=fleetNums.map((n,i)=>({id:`UNIT-0${n}`,driver:drivers[i]||'Driver',status:statuses[i]||'idle',loc:locs[i]||'—',load:loads[i]||'—',pct:pcts[i]||0}));
-
-  const weekRev=['$2,840','$3,120','$2,990','$3,450','$2,760','$3,200','$3,680'][Math.floor(Math.random()*3)+3];
-  const rpm=['$2.92','$3.14','$3.01','$3.28'][Math.floor(Math.random()*4)];
-  document.getElementById('dashRev').textContent=weekRev;
-  document.getElementById('dashRpm').textContent=rpm;
-  document.getElementById('dashMiles').textContent='2,840';
-  document.getElementById('dashComp').textContent='2';
-  document.getElementById('dashCompNote').textContent='Items need attention';
-  document.getElementById('sbRev').textContent=weekRev;
-  document.getElementById('sbRpm').textContent=rpm;
-  document.getElementById('earnMonth').textContent='$13,240';
-  document.getElementById('earnNet').textContent='$8,950';
-
-  renderFleetPreview();
-  renderTruckGrid();
-  renderCompliance();
-  renderEarnings();
-  drawEarningsChart();
-}
-
-function renderFleetPreview(){
-  const el=document.getElementById('dashFleetPreview');
-  el.innerHTML=S.trucks.slice(0,3).map(t=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
-      <div><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700">${t.id}</span> <span style="color:var(--muted);font-size:12px">${t.driver}</span></div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="color:var(--muted);font-size:12px">${t.loc}</span>
-        <span class="truck-status ts-${t.status}">${t.status.toUpperCase()}</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderTruckGrid(){
-  document.getElementById('truckGrid').innerHTML=S.trucks.map(t=>`
-    <div class="truck-card ${t.status}">
-      <div class="truck-id">${t.id}</div>
-      <div class="truck-driver">${t.driver} · ${t.loc}</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">${t.load}</div>
-      <div class="truck-status-row">
-        <span class="truck-status ts-${t.status}">${t.status.toUpperCase()}</span>
-        <span class="truck-miles">${t.pct>0?t.pct+'% done':''}</span>
-      </div>
-      ${t.pct>0?`<div class="truck-progress"><div class="truck-bar" style="width:${t.pct}%"></div></div>`:''}
-    </div>
-  `).join('');
-}
-
-function renderCompliance(){
-  const items=[
-    {icon:'⚠️',cls:'ci-warn',title:'Registration Renewal',desc:'Unit-02 registration expires in 18 days. File with FMCSA to avoid OOS.',due:'18 DAYS',dueCls:'due-warn'},
-    {icon:'⚠️',cls:'ci-warn',title:'Annual DOT Inspection',desc:'Unit-03 last inspection was 11 months ago. Schedule before expiration.',due:'24 DAYS',dueCls:'due-warn'},
-    {icon:'✅',cls:'ci-ok',title:'ELD Compliance',desc:'All units reporting valid ELD data. HOS logs current.',due:'CURRENT',dueCls:'due-ok'},
-    {icon:'✅',cls:'ci-ok',title:'CDL Medical Certificates',desc:'All driver medical certs valid for 6+ months.',due:'6+ MOS',dueCls:'due-ok'},
-    {icon:'✅',cls:'ci-ok',title:'Liability Insurance',desc:'Coverage active through Dec 2026. No gaps.',due:'CURRENT',dueCls:'due-ok'},
-    {icon:'🚨',cls:'ci-alert',title:'Drug & Alcohol Policy',desc:'Annual driver acknowledgement forms due. 1 driver outstanding.',due:'OVERDUE',dueCls:'due-alert'},
-  ];
-  document.getElementById('compList').innerHTML=items.map(i=>`
-    <div class="comp-item">
-      <div class="comp-icon ${i.cls}">${i.icon}</div>
-      <div style="flex:1">
-        <div class="comp-title">${i.title}</div>
-        <div class="comp-desc">${i.desc}</div>
-        <div class="comp-due ${i.dueCls}">${i.due}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderEarnings(){
-  const runs=[
-    {date:'Apr 14',route:'Newark, NJ → Miami, FL',miles:1280,rate:3.20,gross:4096},
-    {date:'Apr 11',route:'Philadelphia, PA → Chicago, IL',miles:780,rate:2.95,gross:2301},
-    {date:'Apr 08',route:'Charlotte, NC → Newark, NJ',miles:640,rate:3.45,gross:2208},
-    {date:'Apr 05',route:'Newark, NJ → Atlanta, GA',miles:860,rate:3.10,gross:2666},
-    {date:'Apr 02',route:'Boston, MA → Washington, DC',miles:440,rate:2.80,gross:1232},
-  ];
-  document.getElementById('earnList').innerHTML=runs.map(r=>`
-    <div class="earn-row">
-      <div>
-        <div class="earn-date">${r.date}</div>
-        <div class="earn-route">${r.route}</div>
-        <div class="earn-rpm">$${r.rate.toFixed(2)}/mi · ${r.miles.toLocaleString()} mi</div>
-      </div>
-      <div class="earn-amount">$${r.gross.toLocaleString()}</div>
-    </div>
-  `).join('');
-}
-
-function drawEarningsChart(){
-  const canvas=document.getElementById('earningsChart');
-  if(!canvas) return;
-  const ctx=canvas.getContext('2d');
-  canvas.width=canvas.offsetWidth||600;
-  canvas.height=80;
-  const data=[2840,3120,2990,3450,2760,3200,3680];
-  const max=Math.max(...data);const min=Math.min(...data);
-  const w=canvas.width,h=canvas.height,pad=8;
-  const xStep=(w-pad*2)/(data.length-1);
-  ctx.clearRect(0,0,w,h);
-  // gradient fill
-  const grad=ctx.createLinearGradient(0,0,0,h);
-  grad.addColorStop(0,'rgba(232,99,10,0.3)');
-  grad.addColorStop(1,'rgba(232,99,10,0)');
-  ctx.beginPath();
-  ctx.moveTo(pad,h-pad-(data[0]-min)/(max-min)*(h-pad*2));
-  data.forEach((d,i)=>{
-    const x=pad+i*xStep,y=h-pad-(d-min)/(max-min)*(h-pad*2);
-    ctx.lineTo(x,y);
-  });
-  ctx.lineTo(w-pad,h-pad);ctx.lineTo(pad,h-pad);ctx.closePath();
-  ctx.fillStyle=grad;ctx.fill();
-  // line
-  ctx.beginPath();ctx.strokeStyle='#e8630a';ctx.lineWidth=2;ctx.lineJoin='round';
-  data.forEach((d,i)=>{
-    const x=pad+i*xStep,y=h-pad-(d-min)/(max-min)*(h-pad*2);
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.stroke();
-  // dots
-  data.forEach((d,i)=>{
-    const x=pad+i*xStep,y=h-pad-(d-min)/(max-min)*(h-pad*2);
-    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
-    ctx.fillStyle='#e8630a';ctx.fill();
-  });
-}
-
-// ── NAV ──
+// NAV
 function showPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  if(el) el.classList.add('active');
-  document.getElementById('topPageName').textContent=id.toUpperCase();
+  if(el)el.classList.add('active');
 }
 
-// ── CLAUDE API ──
-async function callClaude(sys,msgs){
+function setEquip(e,el){
+  equip=e;
+  document.querySelectorAll('.equip-pill').forEach(p=>p.classList.remove('active'));
+  // only deactivate equip pills, not freight pills
+  el.classList.add('active');
+  syncSelects('er-equip',e);
+  syncSelects('pl-equip',e);
+  updateFreightBadge();
+}
+
+function setFreight(f,el){
+  freight=f;
+  document.querySelectorAll('#freightPills .equip-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  syncSelects('er-freight',f);
+  syncSelects('pl-freight',f);
+  updateFreightBadge();
+}
+
+function syncSelects(id,val){
+  const s=document.getElementById(id);
+  if(!s)return;
+  for(let o of s.options){if(o.value===val||o.text===val)o.selected=true}
+}
+
+function updateFreightBadge(){
+  const badge=document.getElementById('freightIntelBadge');
+  const text=document.getElementById('freightIntelText');
+  const bench=freightRPM[freight]||freightRPM['General Freight'];
+  const desc=freightDesc[freight]||'';
+  text.innerHTML=`<strong style="font-family:Barlow Condensed,sans-serif;font-size:13px;letter-spacing:0.05em;text-transform:uppercase">Freight Type Intelligence™ · ${equip} / ${freight}</strong><br>${desc}<br><span style="font-family:Share Tech Mono,monospace;font-size:10px;opacity:0.8">RPM BENCHMARKS → Min: $${bench.min.toFixed(2)} · Target: $${bench.target.toFixed(2)} · Premium: $${bench.premium.toFixed(2)}</span>`;
+  badge.style.display='block';
+}
+
+// CLAUDE API
+async function callClaude(sys,msg){
   const r=await fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:msgs})
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:msg}]})
   });
   const d=await r.json();
   return d.content.map(b=>b.text||'').join('');
 }
-function setBtn(id,loading,label=''){
+function setLoading(id,on,label){
   const b=document.getElementById(id);if(!b)return;
-  b.disabled=loading;
-  b.innerHTML=loading?`<span class="ld"><span></span><span></span><span></span></span> Analyzing...`:label||b.innerHTML;
-}
-function showResult(outId,textId,text){
-  document.getElementById(textId).textContent=text;
-  document.getElementById(outId).classList.add('show');
+  b.disabled=on;
+  if(on)b.innerHTML='<span class="ld"><span></span><span></span><span></span></span> Analyzing...';
+  else if(label)b.innerHTML=label;
 }
 
-// ── LOAD BOARD ──
-const mockLoads=[
-  {pick:'Newark, NJ',drop:'Miami, FL',miles:1280,rate:'$4,096',rpm:'$3.20',weight:'42,000',type:'Dry Van',score:'A',pct:92},
-  {pick:'Elizabeth, NJ',drop:'Atlanta, GA',miles:860,rate:'$2,838',rpm:'$3.30',weight:'38,000',type:'Dry Van',score:'A',pct:88},
-  {pick:'Philadelphia, PA',drop:'Charlotte, NC',miles:480,rate:'$1,344',rpm:'$2.80',weight:'35,000',type:'Dry Van',score:'B',pct:71},
-  {pick:'Newark, NJ',drop:'Chicago, IL',miles:790,rate:'$2,133',rpm:'$2.70',weight:'41,000',type:'Dry Van',score:'B',pct:68},
-  {pick:'Baltimore, MD',drop:'Boston, MA',miles:420,rate:'$882',rpm:'$2.10',weight:'28,000',type:'LTL',score:'C',pct:45},
-];
+// LOAD LOGGING
+function logLoad(){
+  const origin=document.getElementById('log-origin').value||'Unknown';
+  const dest=document.getElementById('log-dest').value||'Unknown';
+  const miles=parseFloat(document.getElementById('log-miles').value)||0;
+  const rev=parseFloat(document.getElementById('log-rev').value)||0;
+  const dh=parseFloat(document.getElementById('log-dh').value)||0;
+  if(!rev){alert('Enter revenue.');return}
+  const rpm=miles>0?(rev/miles).toFixed(2):0;
+  const dhPct=miles>0?Math.round((dh/miles)*100):0;
+  const bench=freightRPM[freight]||freightRPM['General Freight'];
+  loads.unshift({origin,dest,miles,rev,dh,rpm,dhPct,equip,freight,time:new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})});
+  totalRevenue+=rev;
+  document.getElementById('log-origin').value='';
+  document.getElementById('log-dest').value='';
+  document.getElementById('log-miles').value='';
+  document.getElementById('log-rev').value='';
+  document.getElementById('log-dh').value='';
+  updateDash();
+}
+function updateDash(){
+  document.getElementById('topRevenue').textContent='Revenue: $'+totalRevenue.toFixed(0);
+  document.getElementById('dashRev').textContent='$'+totalRevenue.toFixed(0);
+  if(loads.length){
+    const avgRpm=(loads.reduce((s,l)=>s+parseFloat(l.rpm),0)/loads.length).toFixed(2);
+    const avgDh=Math.round(loads.reduce((s,l)=>s+l.dhPct,0)/loads.length);
+    document.getElementById('dashRPM').textContent='$'+avgRpm;
+    document.getElementById('dashDH').textContent=avgDh+'%';
+    const card=document.getElementById('loadHistCard');
+    card.style.display='block';
+    document.getElementById('loadList').innerHTML=loads.map(l=>{
+      const bench=freightRPM[l.freight]||freightRPM['General Freight'];
+      const score=parseFloat(l.rpm)>=bench.target?'high':parseFloat(l.rpm)>=bench.min?'mid':'low';
+      const label=score==='high'?'STRONG':score==='mid'?'AVERAGE':'LOW RPM';
+      return `<div class="load-item"><div class="load-header"><div class="load-origin">${l.origin} <span class="load-arrow">→</span> ${l.dest}</div><div class="load-score-badge ${score}">${label}</div></div><div style="display:flex;align-items:center;justify-content:space-between"><div class="load-details"><span>$${l.rev.toFixed(0)}</span><span>${l.miles}mi</span><span>DH:${l.dhPct}%</span><span style="font-size:9px">${l.equip}·${l.freight}</span></div><div class="load-rpm">$${l.rpm}/mi</div></div></div>`;
+    }).join('');
+  }
+}
 
-async function findLoads(){
-  const origin=document.getElementById('lb-origin').value||S.base||'Northeast';
-  const dest=document.getElementById('lb-dest').value||'any destination';
-  const type=document.getElementById('lb-type').value;
-  const rpm=document.getElementById('lb-rpm').value;
+// ── EMPTYRIG™ DEADHEAD CALC (full version)
+function calcDeadhead(){
+  const miles=parseFloat(document.getElementById('dhc-miles').value)||0;
+  const fuel=parseFloat(document.getElementById('dhc-fuel').value)||3.85;
+  const rpm=parseFloat(document.getElementById('dhc-rpm').value)||2.20;
+  if(miles<=0){document.getElementById('dhcResult').style.display='none';return}
+  const mpg=6.5;
+  const fuelWk=(miles/mpg)*fuel;
+  const revLostWk=miles*rpm;
+  const totalWkLoss=fuelWk+revLostWk;
+  const monthLoss=totalWkLoss*4.3;
+  const yearLoss=totalWkLoss*52;
+  // Revenue Recovery Score: lower DH % = higher score
+  // Estimate DH% from miles (assume 2500 total weekly miles)
+  const estDHpct=Math.min(Math.round((miles/2500)*100),100);
+  const score=Math.max(0,Math.min(100,Math.round(100-(estDHpct*1.8))));
+  document.getElementById('dhcMiles').textContent=miles;
+  document.getElementById('dhcRevLost').textContent='$'+revLostWk.toFixed(0);
+  document.getElementById('dhcFuelWk').textContent='$'+fuelWk.toFixed(0);
+  document.getElementById('dhcMonth').textContent='$'+monthLoss.toFixed(0);
+  document.getElementById('dhcYear').textContent='$'+yearLoss.toFixed(0);
+  document.getElementById('dhcScore').textContent=score+'/100';
+  document.getElementById('dhcScore').style.color=score>=70?'var(--green)':score>=45?'var(--yellow)':'var(--red)';
+  const rec=score<50?'Target freight opportunities within 50 miles of delivery locations. Current deadhead is significantly reducing profitability.':score<70?'Good progress — focus on clustering loads in tighter lanes to reduce empty miles further.':'Strong performance. Maintain your lane discipline and continue targeting backhaul opportunities on every outbound.';
+  document.getElementById('dhcRec').innerHTML=`<strong>Recommendation:</strong> ${rec}<br><span style="font-family:Share Tech Mono,monospace;font-size:10px;opacity:0.7">ESTIMATED DH %: ~${estDHpct}% · Total Weekly Loss: $${totalWkLoss.toFixed(0)}</span>`;
+  document.getElementById('dhcResult').style.display='block';
+}
 
-  setBtn('lbBtn',true);
-  document.getElementById('lbResult').classList.remove('show');
-  document.getElementById('lbTable').style.display='none';
+// EMPTY MILE FORECAST
+function calcForecast(){
+  const miles=parseFloat(document.getElementById('emf-miles').value)||0;
+  const reduce=parseFloat(document.getElementById('emf-reduce').value)||0;
+  if(miles<=0||reduce<=0){document.getElementById('emfResult').style.display='none';return}
+  const currAnnual=miles*52;
+  const targAnnual=currAnnual*(1-(reduce/100));
+  const milesRec=currAnnual-targAnnual;
+  const rpm=2.20;
+  const revRec=milesRec*rpm;
+  document.getElementById('emfCurrAnnual').textContent=(currAnnual).toFixed(0)+' mi';
+  document.getElementById('emfTargAnnual').textContent=(targAnnual).toFixed(0)+' mi';
+  document.getElementById('emfMilesRec').textContent=(milesRec).toFixed(0)+' mi';
+  document.getElementById('emfRevRec').textContent='$'+(revRec).toFixed(0);
+  document.getElementById('emfResult').style.display='block';
+}
 
-  const sys=`You are Haul IQ, an AI freight dispatch system for truckers. Analyze loads and give direct, experienced dispatch advice. You know freight rates, lanes, and broker tactics. Keep it tight — truckers don't want essays. Format your response clearly with: TOP RECOMMENDATION, WHY THIS LOAD WINS, NEGOTIATION TIP, and WATCH OUT FOR.`;
-  const msg=`Trucker profile: ${S.fleetSize}, ${type} out of ${origin}, targeting ${rpm} RPM.
-Looking for loads to: ${dest}
-Their biggest challenge: ${S.challenge}
-
-Give me your top load recommendation and dispatch advice for this operator right now.`;
-
+// EMPTYRIG AI FINDER
+async function runEmptyRig(){
+  const loc=document.getElementById('er-location').value;
+  const dest=document.getElementById('er-dest').value;
+  const eq=document.getElementById('er-equip').value;
+  const ft=document.getElementById('er-freight').value;
+  const dh=document.getElementById('er-dh').value;
+  const rpm=document.getElementById('er-rpm').value;
+  const radius=document.getElementById('er-radius').value;
+  if(!loc){alert('Enter your current empty location.');return}
+  setLoading('erBtn',true);
+  document.getElementById('erResult').classList.remove('show');
+  const bench=freightRPM[ft]||freightRPM['General Freight'];
+  const sys=`You are HaulIQ™ EmptyRig™ Revenue Recovery Intelligence — the most advanced AI backhaul and lane opportunity system for trucking operators. Provide specific, actionable revenue recovery intelligence. Format your response with these exact sections:\n\nREVENUE RECOVERY SCORE: X/100\n\nTOP BACKHAUL OPPORTUNITIES:\n[3-4 specific lane opportunities with origin, destination, typical rate range, and why they fit this equipment/freight combo]\n\nLANE OPPORTUNITY SCANNER:\n[2-3 high-value lane opportunities within their preferred direction with RPM estimates]\n\nBROKER OPPORTUNITY SUGGESTIONS:\n[3-4 specific brokers or load boards known to have volume for this equipment/freight type, with what to search for]\n\nNEARBY FREIGHT INTELLIGENCE:\n[Freight activity analysis within ${radius||50} miles of their empty location]\n\nDEADHEAD REDUCTION STRATEGY:\n[3 specific tactics to reduce deadhead for this equipment and freight type]\n\nTOP PRIORITY ACTION:\n[Single clearest action to take right now to recover revenue]`;
+  const msg=`Equipment: ${eq}\nFreight Type: ${ft}\nFreight Type Intelligence™ RPM Target: $${bench.target.toFixed(2)}/mile\nCurrent empty location: ${loc}\nPreferred direction/destination: ${dest||'open to best opportunity'}\nCurrent deadhead: ${dh||'unknown'}%\nTarget RPM: $${rpm||bench.target.toFixed(2)}/mile\nMax DH to next load: ${radius||50} miles\n\nGenerate EmptyRig™ full revenue recovery intelligence report.`;
   try{
-    const result=await callClaude(sys,[{role:'user',content:msg}]);
-    showResult('lbResult','lbText',result);
-    // render mock table
-    const tbody=document.getElementById('loadTableEl');
-    tbody.innerHTML=`
-      <thead><tr>
-        <th>Pickup</th><th>Delivery</th><th>Miles</th><th>Rate</th><th>RPM</th>
-        <th>Weight</th><th>Type</th><th>AI Score</th><th></th>
-      </tr></thead>
-      <tbody>${mockLoads.map(l=>`
-        <tr>
-          <td class="load-row-pick">${l.pick}</td>
-          <td>${l.drop}</td>
-          <td>${l.miles.toLocaleString()}</td>
-          <td class="load-row-rate ${l.score==='A'?'good':l.score==='B'?'avg':'low'}">${l.rate}</td>
-          <td style="font-family:'Share Tech Mono',monospace;font-size:12px">${l.rpm}</td>
-          <td style="font-size:12px;color:var(--muted)">${l.weight} lbs</td>
-          <td><span class="load-type">${l.type}</span></td>
-          <td><span class="score-badge score-${l.score.toLowerCase()}">${l.score} · ${l.pct}</span></td>
-          <td><button class="load-action" onclick="bookLoad('${l.pick}→${l.drop}')">Book</button></td>
-        </tr>
-      `).join('')}</tbody>`;
-    document.getElementById('lbTable').style.display='block';
-  }catch(e){showResult('lbResult','lbText','Error connecting to AI. Please try again.')}
-  setBtn('lbBtn',false,'Find Best Loads');
+    const r=await callClaude(sys,msg);
+    document.getElementById('erText').textContent=r;
+    document.getElementById('erResult').classList.add('show');
+  }catch(e){document.getElementById('erText').textContent='Error. Please try again.';document.getElementById('erResult').classList.add('show')}
+  setLoading('erBtn',false,'🔄 Scan Revenue Opportunities');
 }
 
-function bookLoad(route){alert(`✅ Load ${route} flagged for booking. In the full version, this would connect to your broker portal and send a booking request automatically.`)}
-
-// ── FLEET ANALYSIS ──
-async function analyzeFleet(){
-  setBtn('fleetBtn',true);
-  document.getElementById('fleetResult').classList.remove('show');
-  const issue=document.getElementById('fleetIssue').value;
-  const sys=`You are Haul IQ fleet intelligence. You analyze small trucking fleet efficiency with direct, actionable recommendations. No fluff. Give: EFFICIENCY SCORE, TOP PROBLEM, FIX IT (specific steps), REVENUE OPPORTUNITY ($ estimate). Truckers need numbers, not theory.`;
-  const msg=`Fleet: ${S.fleetSize}, ${S.freight}, operating out of ${S.base}
-Lanes: ${S.lanes}
-Issue reported: ${issue||'General efficiency review'}
-Trucks in service: ${S.trucks.map(t=>`${t.id}(${t.status})`).join(', ')}`;
-  try{const r=await callClaude(sys,[{role:'user',content:msg}]);showResult('fleetResult','fleetText',r)}
-  catch(e){showResult('fleetResult','fleetText','Error. Try again.')}
-  setBtn('fleetBtn',false,'Analyze Fleet Efficiency');
-}
-
-// ── ROUTE OPTIMIZER ──
-async function optimizeRoute(){
-  const from=document.getElementById('rt-from').value||S.base||'Origin';
-  const to=document.getElementById('rt-to').value;
-  if(!to){alert('Enter a destination.');return}
-  const truck=document.getElementById('rt-truck').value;
-  const fuel=document.getElementById('rt-fuel').value||'3.85';
-  const notes=document.getElementById('rt-notes').value;
-  setBtn('rtBtn',true);
-  document.getElementById('rtResult').classList.remove('show');
-  const sys=`You are Haul IQ route intelligence. Give specific, experienced route recommendations for truck drivers. Include: BEST ROUTE (specific highways), ESTIMATED MILES + TIME, FUEL STOPS (real truck stops by name/city), COST ESTIMATE, DEADHEAD WARNING (if applicable), and ONE PRO TIP. Be specific and practical.`;
-  const msg=`Route: ${from} → ${to}
-Truck: ${truck} | Fuel cost: $${fuel}/gal
-Constraints: ${notes||'none'}
-Driver context: ${S.fleetSize}, ${S.freight} operator`;
-  try{const r=await callClaude(sys,[{role:'user',content:msg}]);showResult('rtResult','rtText',r)}
-  catch(e){showResult('rtResult','rtText','Error. Try again.')}
-  setBtn('rtBtn',false,'Optimize This Route');
-}
-
-// ── EARNINGS FORECAST ──
-async function getForecast(){
-  const rpm=document.getElementById('fc-rpm').value||'2.85';
-  const miles=document.getElementById('fc-miles').value||'2200';
-  const leak=document.getElementById('fc-leak').value;
-  setBtn('fcBtn',true);
-  document.getElementById('fcResult').classList.remove('show');
-  const sys=`You are Haul IQ earnings intelligence. Give direct financial analysis for truckers. Include: CURRENT ANNUAL ESTIMATE, WHAT GOOD LOOKS LIKE ($), THE GAP ($), TOP 3 ACTIONS TO CLOSE THE GAP (specific and numbered), REALISTIC TIMELINE. Use real freight industry benchmarks. Be a trusted advisor, not a hype machine.`;
-  const msg=`Current RPM: $${rpm} | Weekly miles: ${miles}
-Biggest leak: ${leak}
-Fleet: ${S.fleetSize}, ${S.freight}, ${S.lanes} lanes`;
-  try{const r=await callClaude(sys,[{role:'user',content:msg}]);showResult('fcResult','fcText',r)}
-  catch(e){showResult('fcResult','fcText','Error. Try again.')}
-  setBtn('fcBtn',false,'Get AI Earnings Forecast');
-}
-
-// ── COMPLIANCE ──
-async function askCompliance(){
-  const q=document.getElementById('compQ').value.trim();
-  if(!q){alert('Enter your compliance question.');return}
-  setBtn('compBtn',true);
-  document.getElementById('compResult').classList.remove('show');
-  const sys=`You are Haul IQ compliance advisor, expert in FMCSA regulations, DOT rules, HOS (Hours of Service), CDL requirements, and trucking compliance. Give clear, plain-English answers. Always state: the rule/regulation number if applicable, what is ALLOWED vs PROHIBITED, and what happens if they violate it (fine/penalty). End with a DISCLAIMER that they should verify with a compliance officer or attorney for high-stakes decisions.`;
-  const msg=q+`\n\nContext: ${S.fleetSize}, ${S.freight} operator based in ${S.base}`;
-  try{const r=await callClaude(sys,[{role:'user',content:msg}]);showResult('compResult','compText',r)}
-  catch(e){showResult('compResult','compText','Error. Try again.')}
-  setBtn('compBtn',false,'Get Compliance Answer');
-}
-
-// ── DISPATCHER CHAT ──
-const dispSys=`You are Haul IQ, an expert AI dispatcher for truckers. You know freight rates, broker tactics, HOS rules, route optimization, and how to build a profitable trucking operation. You speak like an experienced dispatcher — direct, practical, no-nonsense. You know the user's profile and use it. Keep responses under 200 words. Give real, actionable advice.`;
-let dispHist=[];
-
-async function sendDispatch(){
-  const input=document.getElementById('dispInput');
-  const msg=input.value.trim();
-  if(!msg)return;
-  input.value='';
-  addChatMsg('user',msg,'dispatchChat');
-  dispHist.push({role:'user',content:`Context: ${S.fleetSize} operator, ${S.freight}, based in ${S.base}, lanes: ${S.lanes}. Question: ${msg}`});
-  const thinking=addChatMsg('ai','...','dispatchChat',true);
+// NEARBY FREIGHT FINDER
+async function runNearbyFreight(){
+  const loc=document.getElementById('nf-location').value;
+  const radius=document.getElementById('nf-radius').value||75;
+  if(!loc){alert('Enter your empty location.');return}
+  setLoading('nfBtn',true);
+  document.getElementById('nfResult').classList.remove('show');
+  const sys=`You are HaulIQ™ Nearby Freight Opportunity Finder. Identify freight activity and broker opportunities near a specific location for a trucking operator. Be specific about: common commodities moving in that region, top shippers and brokers active in that corridor, typical rate levels, and the best strategy to find a load fast. Equipment: ${equip}. Freight specialty: ${freight}.`;
   try{
-    const r=await callClaude(dispSys,dispHist);
-    dispHist.push({role:'assistant',content:r});
-    thinking.textContent=r;
-  }catch(e){thinking.textContent='Connection error. Try again.'}
-  document.getElementById('dispatchChat').scrollTop=9999;
+    const r=await callClaude(sys,`Empty location: ${loc}\nSearch radius: ${radius} miles\nEquipment: ${equip}\nFreight type: ${freight}\n\nWhat freight is typically moving near this location and how do I find it fast?`);
+    document.getElementById('nfText').textContent=r;
+    document.getElementById('nfResult').classList.add('show');
+  }catch(e){document.getElementById('nfText').textContent='Error. Please try again.';document.getElementById('nfResult').classList.add('show')}
+  setLoading('nfBtn',false,'📡 Find Nearby Freight');
 }
 
-function addChatMsg(who,text,containerId,ret=false){
-  const c=document.getElementById(containerId);
-  const d=document.createElement('div');
-  d.className=`cmsg ${who==='user'?'user':''}`;
-  d.innerHTML=`<div class="cav ${who}">${who==='ai'?'H':S.name.charAt(0)||'U'}</div><div class="cbubble">${text}</div>`;
-  c.appendChild(d);c.scrollTop=c.scrollHeight;
-  if(ret)return d.querySelector('.cbubble');
+// PROFIT LEAK
+async function runProfitLeak(){
+  const miles=document.getElementById('pl-miles').value;
+  const fuel=document.getElementById('pl-fuel').value;
+  const dh=document.getElementById('pl-dh').value;
+  const rpm=document.getElementById('pl-rpm').value;
+  const ploads=document.getElementById('pl-loads').value;
+  const eq=document.getElementById('pl-equip').value;
+  const ft=document.getElementById('pl-freight').value;
+  const lanes=document.getElementById('pl-lanes').value;
+  if(!miles||!rpm){alert('Enter weekly miles and RPM at minimum.');return}
+  setLoading('plBtn',true);
+  document.getElementById('plResult').style.display='none';
+  const bench=freightRPM[ft]||freightRPM['General Freight'];
+  const sys=`You are HaulIQ™ Profit Leak Detector™ with Freight Type Intelligence™. Analyze trucking profitability using both equipment type and freight type benchmarks. Respond in this exact format:\n\nCURRENT WEEKLY REVENUE: $X,XXX\nTARGET WEEKLY REVENUE: $X,XXX\nREVENUE RECOVERY SCORE: X/100\nESTIMATED MONTHLY LOSS: $X,XXX\nANNUAL LOSS OPPORTUNITY: $XX,XXX\nPRIMARY LEAK: [specific issue]\nSECONDARY LEAK: [specific issue]\nFREIGHT TYPE INSIGHT: [specific advice for this freight type]\nRPM IMPROVEMENT: +$X.XX/mile\nACTION PLAN:\n1. [Action]\n2. [Action]\n3. [Action]`;
+  const msg=`Equipment: ${eq}\nFreight Type: ${ft}\nFreight Type Intelligence™ Benchmarks — Min RPM: $${bench.min} · Target RPM: $${bench.target} · Premium RPM: $${bench.premium}\nWeekly miles: ${miles}\nFuel: $${fuel||'3.85'}/gal\nDeadhead: ${dh||'unknown'}%\nAvg RPM: $${rpm}/mile\nLoads/week: ${ploads||'unknown'}\nPrimary lanes: ${lanes||'not specified'}\n\nGenerate Profit Leak Detector™ analysis using Freight Type Intelligence™.`;
+  try{
+    const r=await callClaude(sys,msg);
+    const lines=r.split('\n');
+    const get=(lbl)=>{const l=lines.find(x=>x.startsWith(lbl));return l?l.replace(lbl,'').trim():''};
+    const weekRev=get('CURRENT WEEKLY REVENUE:');
+    const targetRev=get('TARGET WEEKLY REVENUE:');
+    const score=get('REVENUE RECOVERY SCORE:');
+    const monthLoss=get('ESTIMATED MONTHLY LOSS:');
+    const yearLoss=get('ANNUAL LOSS OPPORTUNITY:');
+    const leak1=get('PRIMARY LEAK:');
+    const freightInsight=get('FREIGHT TYPE INSIGHT:');
+    const rpmImp=get('RPM IMPROVEMENT:');
+    const actionIdx=lines.findIndex(x=>x.startsWith('ACTION PLAN:'));
+    const actions=actionIdx>=0?lines.slice(actionIdx+1).filter(x=>x.trim()).join('\n'):'';
+    document.getElementById('plResult').innerHTML=`
+      <div class="leak-grid">
+        <div class="leak-row"><span class="leak-lbl">Current Weekly Revenue</span><span class="leak-val orange">${weekRev||'—'}</span></div>
+        <div class="leak-row"><span class="leak-lbl">Target Weekly Revenue</span><span class="leak-val green">${targetRev||'—'}</span></div>
+        <div class="leak-row"><span class="leak-lbl">Revenue Recovery Score</span><span class="leak-val orange">${score||'—'}</span></div>
+        <div class="leak-row"><span class="leak-lbl">Monthly Leak</span><span class="leak-val red">${monthLoss||'—'}</span></div>
+        <div class="leak-row"><span class="leak-lbl">Annual Opportunity</span><span class="leak-val green">${yearLoss||'—'}</span></div>
+        <div class="leak-row"><span class="leak-lbl">Primary Leak</span><span class="leak-val" style="font-size:13px;font-weight:600;text-align:right;max-width:55%">${leak1||'—'}</span></div>
+        <div class="leak-row"><span class="leak-lbl">RPM Improvement</span><span class="leak-val green">${rpmImp||'—'}</span></div>
+      </div>
+      ${freightInsight?`<div class="callout callout-orange" style="margin-top:8px;font-size:12px"><strong style="font-family:Share Tech Mono,monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase">Freight Type Intelligence™ · ${ft}</strong><br>${freightInsight}</div>`:''}
+      ${actions?`<div class="action-box"><div class="action-box-title">Action Plan</div><p>${actions}</p></div>`:''}`;
+    document.getElementById('plResult').style.display='block';
+  }catch(e){document.getElementById('plResult').innerHTML='<div class="callout callout-orange">Error. Please try again.</div>';document.getElementById('plResult').style.display='block'}
+  setLoading('plBtn',false,'🔍 Detect Profit Leaks');
+}
+
+// LOAD WORTH-IT
+function calcLoadWorth(){
+  const pay=parseFloat(document.getElementById('lw-pay').value)||0;
+  const miles=parseFloat(document.getElementById('lw-miles').value)||0;
+  const dh=parseFloat(document.getElementById('lw-dh').value)||0;
+  if(pay>0&&miles>0){
+    const totalMiles=miles+dh;
+    const rpm=pay/totalMiles;
+    const bench=freightRPM[freight]||freightRPM['General Freight'];
+    const isStrong=rpm>=bench.target;
+    const isMid=rpm>=bench.min;
+    const score=isStrong?'high':isMid?'mid':'low';
+    const verdict=isStrong?'TAKE THIS LOAD':isMid?'MARGINAL — NEGOTIATE':'LOW VALUE — PASS';
+    const color=isStrong?'var(--green)':isMid?'var(--yellow)':'var(--red)';
+    const callClass=isStrong?'callout-green':isMid?'callout-orange':'callout-red';
+    document.getElementById('lwResult').innerHTML=`
+      <div class="stat-row">
+        <div class="stat-chip"><div class="stat-val" style="color:${color}">${isStrong?'A':isMid?'B':'C'}</div><div class="stat-label">Load Grade</div></div>
+        <div class="stat-chip"><div class="stat-val orange">$${rpm.toFixed(2)}</div><div class="stat-label">All-In RPM</div></div>
+        <div class="stat-chip"><div class="stat-val blue">${totalMiles}</div><div class="stat-label">Total Miles</div></div>
+      </div>
+      <div class="callout ${callClass}"><strong style="font-family:Barlow Condensed,sans-serif;letter-spacing:0.05em;font-size:15px">${verdict}</strong><br>$${rpm.toFixed(2)}/mi all-in · ${freight} target: $${bench.target.toFixed(2)}/mi</div>`;
+    document.getElementById('lwResult').style.display='block';
+  }
+}
+
+// HOS
+function updateHOS(){
+  const driveUsed=parseFloat(document.getElementById('hos-drive-used').value)||0;
+  const dutyUsed=parseFloat(document.getElementById('hos-duty-used').value)||0;
+  const remDrive=Math.max(0,11-driveUsed);
+  const remDuty=Math.max(0,14-dutyUsed);
+  document.getElementById('hosRemDrive').textContent=remDrive.toFixed(1)+' hrs';
+  document.getElementById('hosRemDuty').textContent=remDuty.toFixed(1)+' hrs';
+  document.getElementById('hosDriveBar').style.width=(driveUsed/11*100)+'%';
+  document.getElementById('hosDriveBar').style.background=remDrive<2?'var(--red)':remDrive<4?'var(--yellow)':'var(--orange)';
+  document.getElementById('hosDutyBar').style.width=(dutyUsed/14*100)+'%';
+  document.getElementById('hosDutyBar').style.background=remDuty<2?'var(--red)':'var(--yellow)';
+  const alertEl=document.getElementById('hosAlert');
+  const breakHrs=parseFloat(document.getElementById('hos-break').value)||0;
+  if(remDrive<2){alertEl.innerHTML='⚠️ Drive time critically low — less than 2 hours remain. Plan your 10-hour reset immediately.';alertEl.style.display='block'}
+  else if(breakHrs>=8){alertEl.innerHTML='⚠️ Approaching 30-minute break requirement. Verify your hours with your ELD.';alertEl.style.display='block'}
+  else{alertEl.style.display='none'}
+  document.getElementById('hosDisplay').style.display='block';
+}
+async function runHOSPlan(){
+  const route=document.getElementById('trip-route').value;
+  const hours=document.getElementById('trip-hours').value;
+  const driveUsed=document.getElementById('hos-drive-used').value||0;
+  if(!route){alert('Enter a trip route.');return}
+  setLoading('hosBtn',true);
+  document.getElementById('hosResult').classList.remove('show');
+  const sys=`You are HaulIQ™ HoursGuard™ HOS Trip Planner. PLANNING TOOL ONLY — not compliance software. Analyze drive time availability and generate a trip plan. Include: whether the trip fits, recommended start time, break timing, and if a 10-hour reset is needed. Always end with: "Verify your official ELD logs for compliance."`;
+  try{
+    const r=await callClaude(sys,`Drive hours used: ${driveUsed}\nTrip: ${route}\nEstimated drive time: ${hours} hours\nEquipment: ${equip}\n\nGenerate HoursGuard™ trip plan.`);
+    document.getElementById('hosText').textContent=r;
+    document.getElementById('hosResult').classList.add('show');
+  }catch(e){document.getElementById('hosText').textContent='Error. Please try again.';document.getElementById('hosResult').classList.add('show')}
+  setLoading('hosBtn',false,'⏱️ Analyze Trip HOS');
+}
+
+// AI DISPATCHER
+async function askDispatcher(){
+  const q=document.getElementById('disp-input').value.trim();
+  if(!q){alert('Enter your dispatch question.');return}
+  await runDispatch(q);
+}
+async function quickDispatch(q){
+  document.getElementById('disp-input').value=q;
+  await runDispatch(q);
+  showPage('dispatch',document.querySelectorAll('.nav-btn')[4]);
+}
+async function runDispatch(q){
+  setLoading('dispBtn',true);
+  document.getElementById('dispResult').classList.remove('show');
+  const bench=freightRPM[freight]||freightRPM['General Freight'];
+  const sys=`You are HaulIQ™ 24/7 AI Dispatcher™ — expert trucking operations AI with Freight Type Intelligence™. Equipment: ${equip}. Freight specialty: ${freight}. RPM Benchmarks for this freight type — Min: $${bench.min} · Target: $${bench.target} · Premium: $${bench.premium}/mile. Give direct, operator-level advice specific to this equipment and freight combination.`;
+  try{
+    const r=await callClaude(sys,q);
+    document.getElementById('dispText').textContent=r;
+    document.getElementById('dispResult').classList.add('show');
+  }catch(e){document.getElementById('dispText').textContent='Error. Please try again.';document.getElementById('dispResult').classList.add('show')}
+  setLoading('dispBtn',false,'🤖 Ask AI Dispatcher™');
+}
+
+// ROI
+function calcROI(){
+  const miles=parseFloat(document.getElementById('roi-miles').value)||0;
+  const rpm=parseFloat(document.getElementById('roi-rpm').value)||0;
+  const trpm=parseFloat(document.getElementById('roi-trpm').value)||0;
+  const dh=parseFloat(document.getElementById('roi-dh').value)||0;
+  const tdh=parseFloat(document.getElementById('roi-tdh').value)||0;
+  const mpg=parseFloat(document.getElementById('roi-mpg').value)||6.5;
+  const fuel=parseFloat(document.getElementById('roi-fuel').value)||3.85;
+  if(!miles||!rpm){alert('Enter weekly miles and current RPM at minimum.');return}
+  const currWeekRev=miles*rpm;
+  const targWeekRev=miles*trpm;
+  const rpmGainWeek=(trpm-rpm)*miles;
+  const dhMilesSaved=miles*(dh-tdh)/100;
+  const fuelSavedWeek=(dhMilesSaved/mpg)*fuel;
+  const totalWeekGain=rpmGainWeek+fuelSavedWeek;
+  const monthGain=totalWeekGain*4.3;
+  const yearGain=totalWeekGain*52;
+  document.getElementById('roiResult').innerHTML=`
+    <div class="stat-row">
+      <div class="stat-chip"><div class="stat-val orange">$${monthGain.toFixed(0)}</div><div class="stat-label">Monthly Gain</div></div>
+      <div class="stat-chip"><div class="stat-val green">$${yearGain.toFixed(0)}</div><div class="stat-label">Annual Gain</div></div>
+      <div class="stat-chip"><div class="stat-val blue">${dhMilesSaved.toFixed(0)}</div><div class="stat-label">DH Miles Saved/Wk</div></div>
+    </div>
+    <div class="leak-grid">
+      <div class="leak-row"><span class="leak-lbl">Current Weekly Revenue</span><span class="leak-val orange">$${currWeekRev.toFixed(0)}</span></div>
+      <div class="leak-row"><span class="leak-lbl">Target Weekly Revenue</span><span class="leak-val green">$${targWeekRev.toFixed(0)}</span></div>
+      <div class="leak-row"><span class="leak-lbl">RPM Revenue Gain/Week</span><span class="leak-val green">+$${rpmGainWeek.toFixed(0)}</span></div>
+      <div class="leak-row"><span class="leak-lbl">Fuel Savings/Week</span><span class="leak-val green">+$${fuelSavedWeek.toFixed(0)}</span></div>
+      <div class="leak-row"><span class="leak-lbl">Total Gain/Week</span><span class="leak-val green">+$${totalWeekGain.toFixed(0)}</span></div>
+      <div class="leak-row"><span class="leak-lbl">HaulIQ™ Monthly Cost</span><span class="leak-val orange">$197</span></div>
+      <div class="leak-row"><span class="leak-lbl">Net Monthly ROI</span><span class="leak-val green">+$${(monthGain-197).toFixed(0)}</span></div>
+    </div>`;
+  document.getElementById('roiResult').style.display='block';
+}
+async function runROIAnalysis(){
+  const desc=document.getElementById('roi-desc').value;
+  if(!desc){alert('Describe your operation first.');return}
+  setLoading('roiAiBtn',true);
+  document.getElementById('roiAiResult').classList.remove('show');
+  const bench=freightRPM[freight]||freightRPM['General Freight'];
+  const sys=`You are HaulIQ™ ROI Intelligence System with Freight Type Intelligence™. Analyze a trucking operation and provide a profitability improvement roadmap. Include: current estimated monthly revenue, target monthly revenue, top 3 ROI opportunities with dollar impact, 90-day action plan, and expected ROI from HaulIQ™. Use Freight Type Intelligence™ benchmarks: Min RPM $${bench.min} · Target $${bench.target} · Premium $${bench.premium}.`;
+  try{
+    const r=await callClaude(sys,`Operation: ${desc}\nEquipment: ${equip}\nFreight Type: ${freight}\n\nGenerate ROI Intelligence Analysis.`);
+    document.getElementById('roiAiText').textContent=r;
+    document.getElementById('roiAiResult').classList.add('show');
+  }catch(e){document.getElementById('roiAiText').textContent='Error. Please try again.';document.getElementById('roiAiResult').classList.add('show')}
+  setLoading('roiAiBtn',false,'📊 Generate ROI Analysis');
 }
 </script>
+
 </body>
 </html>
